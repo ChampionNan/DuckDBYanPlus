@@ -12,6 +12,7 @@
 #include "duckdb/planner/logical_operator.hpp"
 #include "duckdb/planner/logical_operator_visitor.hpp"
 #include "duckdb/common/enums/optimizer_type.hpp"
+#include "duckdb/optimizer/aggregation_pushdown.hpp"
 
 #include <functional>
 
@@ -39,6 +40,11 @@ private:
 	void RunBuiltInOptimizers();
 	void RunOptimizer(OptimizerType type, const std::function<void()> &callback);
 	void Verify(LogicalOperator &op);
+
+	bool HasJoins(LogicalOperator* op);
+	QueryType DetectQueryType(LogicalOperator* op);
+	int DetermineMaxHeight(LogicalOperator* op);
+	void PrintOperatorBindings(LogicalOperator* op, const string& prefix = "");
 
 public:
 	// helper functions

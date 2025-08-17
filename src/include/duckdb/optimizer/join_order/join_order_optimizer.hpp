@@ -25,7 +25,7 @@ namespace duckdb {
 
 class JoinOrderOptimizer {
 public:
-	explicit JoinOrderOptimizer(ClientContext &context);
+	explicit JoinOrderOptimizer(ClientContext &context, bool GYO = false) : context(context), query_graph_manager(context), GYO(GYO) {}
 	JoinOrderOptimizer CreateChildOptimizer();
 
 public:
@@ -37,6 +37,12 @@ public:
 	//! Adds/gets delim scan stats
 	void AddDelimScanStats(RelationStats &stats);
 	RelationStats GetDelimScanStats();
+
+	unique_ptr<LogicalOperator> CallSolveJoinOrderFixed(unique_ptr<LogicalOperator> plan, vector<LogicalOperator*> &exec_order);
+
+	const QueryGraphEdges &GetQueryGraphEdges() const {
+		return query_graph_manager.GetQueryGraphEdges();
+	}
 
 private:
 	ClientContext &context;
@@ -55,6 +61,8 @@ private:
 	CardinalityEstimator cardinality_estimator;
 
 	unordered_set<std::string> join_nodes_in_full_plan;
+
+	bool GYO;
 
 	//! Mapping from materialized CTE index to stats
 	unordered_map<idx_t, RelationStats> materialized_cte_stats;

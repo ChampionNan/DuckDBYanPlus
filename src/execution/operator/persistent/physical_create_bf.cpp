@@ -192,6 +192,7 @@ public:
 };
 
 bool PhysicalCreateBF::GiveUpBFCreation(const DataChunk &chunk, OperatorSinkInput &input) const {
+	/* NOTE: Remove for RPT
 	auto &lstate = input.local_state.Cast<CreateBFLocalSinkState>();
 	auto &gstate = input.global_state.Cast<CreateBFGlobalSinkState>();
 
@@ -250,7 +251,7 @@ bool PhysicalCreateBF::GiveUpBFCreation(const DataChunk &chunk, OperatorSinkInpu
 			}
 		}
 	}
-
+	*/
 	return false;
 }
 

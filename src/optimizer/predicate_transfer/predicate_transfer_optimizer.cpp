@@ -11,6 +11,8 @@
 #include "duckdb/main/client_data.hpp"
 #include "duckdb/planner/operator/logical_filter.hpp"
 
+#include <iostream>
+
 namespace duckdb {
 
 unique_ptr<LogicalOperator> PredicateTransferOptimizer::PreOptimize(unique_ptr<LogicalOperator> plan) {
@@ -33,6 +35,7 @@ unique_ptr<LogicalOperator> PredicateTransferOptimizer::Optimize(unique_ptr<Logi
 
 	// **Backward pass**: Process nodes in original order (from first to last)
 	// - Similar to the forward pass, but for backward edges
+	/*
 	if (!ordered_nodes.empty() && ordered_nodes.front()->type == LogicalOperatorType::LOGICAL_GET) {
 		auto &root = ordered_nodes.front()->Cast<LogicalGet>();
 		if (root.table_filters.filters.empty()) {
@@ -47,7 +50,7 @@ unique_ptr<LogicalOperator> PredicateTransferOptimizer::Optimize(unique_ptr<Logi
 		for (auto &BF_plan : CreateBloomFilterPlan(*current_node, true)) {
 			graph_manager.AddFilterPlan(BF_plan.first, BF_plan.second, true);
 		}
-	}
+	}*/
 
 	return InsertTransferOperators(std::move(plan));
 }
@@ -266,4 +269,40 @@ void PredicateTransferOptimizer::GetColumnBindingExpression(Expression &expr,
 		    expr, [&](unique_ptr<Expression> &child) { GetColumnBindingExpression(*child, expressions); });
 	}
 }
+
+vector<LogicalOperator*> PredicateTransferOptimizer::GetBFOrder() {
+	vector<LogicalOperator*> result;
+	for(auto &node : graph_manager.transfer_order) {
+		switch(node->type) {
+			case LogicalOperatorType::LOGICAL_GET:
+			case LogicalOperatorType::LOGICAL_DELIM_GET:{
+				result.emplace_back(node);
+				break;
+			}
+			case LogicalOperatorType::LOGICAL_FILTER: {
+				if (node->children[0]->type == LogicalOperatorType::LOGICAL_GET) {
+					result.emplace_back(node->children[0].get());
+				}
+				break;
+			}
+			default: {
+				break;
+			}
+		}
+	}
+	return result;
+}
+
+void PredicateTransferOptimizer::PrintDAGManager() {
+    std::cout << "\n=== DAG Manager Contents ===\n" << std::endl;
+    // Print execution order
+    auto& exec_order = graph_manager.transfer_order;
+	std::cout << "Execution Order:" << std::endl;
+    for (size_t i = 0; i < exec_order.size(); i++) {
+        auto op = exec_order[i];
+        std::cout << i << ": " << op->GetName() << " " << std::endl;
+    }
+    std::cout << "\n=== End DAG Manager Contents ===\n" << std::endl;
+}
+
 } // namespace duckdb

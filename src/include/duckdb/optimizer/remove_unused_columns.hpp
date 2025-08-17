@@ -27,6 +27,7 @@ class BaseColumnPruner : public LogicalOperatorVisitor {
 protected:
 	//! The map of column references
 	column_binding_map_t<ReferencedColumn> column_references;
+	column_binding_map_t<ColumnBinding> global_map;
 
 protected:
 	void VisitExpression(unique_ptr<Expression> *expression) override;
@@ -57,6 +58,8 @@ public:
 	}
 
 	void VisitOperator(LogicalOperator &op) override;
+	void VisitOperatorBottomUp(LogicalOperator &op);
+	void GetUpdateBinding(Expression &expr);
 
 private:
 	Binder &binder;

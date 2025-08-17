@@ -18,12 +18,12 @@ void TransferBFLinker::LinkBFOperators(LogicalOperator &op) {
 
 	state = State::CLEAN_USELESS_OPERATORS;
 	VisitOperator(op);
-
+	/* NOTE: Remove for RPT
 	state = State::UPDATE_MIN_MAX_BINDING;
 	VisitOperator(op);
 
 	state = State::SMOOTH_MARK_JOIN;
-	VisitOperator(op);
+	VisitOperator(op);*/
 }
 
 void TransferBFLinker::VisitOperator(LogicalOperator &op) {

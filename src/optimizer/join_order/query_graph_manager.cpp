@@ -19,10 +19,15 @@ static bool Disjoint(const unordered_set<T> &a, const unordered_set<T> &b) {
 	});
 }
 
-bool QueryGraphManager::Build(JoinOrderOptimizer &optimizer, LogicalOperator &op) {
+bool QueryGraphManager::Build(JoinOrderOptimizer &optimizer, LogicalOperator &op, bool recursive) {
 	// have the relation manager extract the join relations and create a reference list of all the
 	// filter operators.
-	auto can_reorder = relation_manager.ExtractJoinRelations(optimizer, op, filter_operators);
+	bool can_reorder;
+	if (recursive) {
+		can_reorder = relation_manager.ExtractJoinRelations(optimizer, op, filter_operators);
+	} else {
+		can_reorder = relation_manager.ExtractJoinRelationsNonRecursive(op, filter_operators);
+	}
 	auto num_relations = relation_manager.NumRelations();
 	if (num_relations <= 1 || !can_reorder) {
 		// nothing to optimize/reorder

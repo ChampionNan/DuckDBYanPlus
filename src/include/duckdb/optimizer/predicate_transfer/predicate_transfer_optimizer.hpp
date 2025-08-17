@@ -20,6 +20,9 @@ public:
 	//! order optimization, because it cannot handle newly inserted operator correctly.
 	unique_ptr<LogicalOperator> Optimize(unique_ptr<LogicalOperator> plan);
 
+	vector<LogicalOperator*> GetBFOrder();
+	void PrintDAGManager();
+
 private:
 	unique_ptr<LogicalOperator> InsertTransferOperators(unique_ptr<LogicalOperator> plan);
 

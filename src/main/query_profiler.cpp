@@ -151,6 +151,8 @@ bool QueryProfiler::OperatorRequiresProfiling(const PhysicalOperatorType op_type
 	case PhysicalOperatorType::RECURSIVE_CTE:
 	case PhysicalOperatorType::RECURSIVE_KEY_CTE:
 	case PhysicalOperatorType::EMPTY_RESULT:
+	case PhysicalOperatorType::USE_BF:
+	case PhysicalOperatorType::CREATE_BF:
 	case PhysicalOperatorType::EXTENSION:
 		return true;
 	default:
