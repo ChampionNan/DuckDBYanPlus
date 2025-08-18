@@ -190,6 +190,14 @@ void Optimizer::RunBuiltInOptimizers() {
     std::cout << "Query Type: " << static_cast<int>(query_type) << std::endl;
     bool GYO = !(query_type == QueryType::OTHER);
 
+    // Begin: Keep the copy
+    auto plan_original = plan->Copy(context);
+    bool is_explain_or_copy = false;
+    if (plan->type == LogicalOperatorType::LOGICAL_EXPLAIN || plan->type == LogicalOperatorType::LOGICAL_COPY_TO_FILE) {
+        is_explain_or_copy = true;
+        plan = std::move(plan->children[0]);
+    }
+
     // Step1: do the join ordering
     RunOptimizer(OptimizerType::JOIN_ORDER, [&]() {
 		JoinOrderOptimizer optimizer(context, GYO);
@@ -198,13 +206,6 @@ void Optimizer::RunBuiltInOptimizers() {
             plan = optimizer.CallSolveJoinOrderFixed(std::move(plan), empty_bf_order);
         }
 	});
-	// Begin: Keep the copy
-    auto plan_original = plan->Copy(context);
-    bool is_explain_or_copy = false;
-    if (plan->type == LogicalOperatorType::LOGICAL_EXPLAIN || plan->type == LogicalOperatorType::LOGICAL_COPY_TO_FILE) {
-        is_explain_or_copy = true;
-        plan = std::move(plan->children[0]);
-    }
 
     // Step2: specific operation for different query types
 	if (query_type == QueryType::SELECT_STAR) {
@@ -252,8 +253,9 @@ void Optimizer::RunBuiltInOptimizers() {
             aggregation_pushdown.RecordAggPushdown(plan_copy);
             plan = aggregation_pushdown.ApplyAgg(std::move(plan));
         });
-        std::cout << "1. After ApplyAgg without pruning " << std::endl;
-	    plan->Print();
+        // std::cout << "1. After ApplyAgg without pruning " << std::endl;
+	    // plan->Print();
+        // PrintOperatorBindings(plan.get());
         for (int i = 0; i < max_height; i++) {
             RunOptimizer(OptimizerType::UNUSED_COLUMNS, [&]() {
                 RemoveUnusedColumns unused(binder, context, true);
@@ -263,16 +265,18 @@ void Optimizer::RunBuiltInOptimizers() {
                 AggregationPushdown aggregation_pushdown(binder, context, query_type);
                 plan = aggregation_pushdown.UpdateBinding(std::move(plan));
             });
-            std::cout << "1-" << i << "column pruning" << std::endl;
-	        plan->Print();
+            // std::cout << "1-" << i << "column pruning" << std::endl;
+	        // plan->Print();
+            // PrintOperatorBindings(plan.get());
         }
         // Fix duplicate column error
         RunOptimizer(OptimizerType::UNUSED_COLUMNS, [&]() {
             RemoveUnusedColumns unused(binder, context, true);
             unused.VisitOperatorBottomUp(*plan);
         });
-        std::cout << "After duplicate fix" << std::endl;
-	    plan->Print();
+        // std::cout << "After duplicate fix" << std::endl;
+	    // plan->Print();
+        // PrintOperatorBindings(plan.get());
 	}
 
     // End: Restore the plan
@@ -284,6 +288,7 @@ void Optimizer::RunBuiltInOptimizers() {
 
     std::cout << "2. After whole Agg-Pushdown Plan " << std::endl;
 	plan->Print();
+    // PrintOperatorBindings(plan.get());
 
 	// rewrites UNNESTs in DelimJoins by moving them to the projection
 	RunOptimizer(OptimizerType::UNNEST_REWRITER, [&]() {

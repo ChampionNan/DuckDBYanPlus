@@ -23,6 +23,9 @@
 #include "duckdb/planner/operator/logical_create_bf.hpp"
 #include "duckdb/function/scalar/struct_utils.hpp"
 
+#include "duckdb/optimizer/aggregation_pushdown.hpp"
+#include "duckdb/planner/expression/bound_cast_expression.hpp"
+
 namespace duckdb {
 
 void BaseColumnPruner::ReplaceBinding(ColumnBinding current_binding, ColumnBinding new_binding) {
@@ -380,6 +383,16 @@ void RemoveUnusedColumns::GetUpdateBinding(Expression &expr) {
         if (it != global_map.end()) {
             col_ref.binding = it->second;
         }
+    } else if (expr.GetExpressionClass() == ExpressionClass::BOUND_FUNCTION) {
+		auto &function = expr.Cast<BoundFunctionExpression>();
+		for (auto &child : function.children) {
+			GetUpdateBinding(*child);
+		}
+	} else if (expr.GetExpressionClass() == ExpressionClass::BOUND_CAST) {
+        auto &cast = expr.Cast<BoundCastExpression>();
+        GetUpdateBinding(*cast.child);
+    } else {
+        throw NotImplementedException("GetUpdateBinding not implemented for expression class %d", expr.GetExpressionClass());
     }
 }
 

@@ -131,7 +131,14 @@ void Vector::Reference(const Value &value) {
 
 void Vector::Reference(const Vector &other) {
 	if (other.GetType().id() != GetType().id()) {
-		throw InternalException("Vector::Reference used on vector of different type");
+		if (GetType().id() == LogicalTypeId::BIGINT && other.GetType().id() == LogicalTypeId::HUGEINT) {
+			type = other.GetType();
+		} else {
+			throw InternalException(
+            "Vector::Reference used on vector of different type - Expected: %s, Got: %s", 
+            GetType().ToString(), other.GetType().ToString());
+		// throw InternalException("Vector::Reference used on vector of different type");
+		}
 	}
 	D_ASSERT(other.GetType() == GetType());
 	Reinterpret(other);

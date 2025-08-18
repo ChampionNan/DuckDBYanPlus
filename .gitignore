@@ -365,6 +365,6 @@ tools/pythonpkg/duckdb_build/i
 
 # db store
 *_db*
-test*
+*test*
 *.txt
 

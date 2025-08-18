@@ -127,7 +127,7 @@ unique_ptr<LogicalOperator> JoinOrderOptimizer::CallSolveJoinOrderFixed(unique_p
 #endif
 
 	// NOTE: Fallback to DuckDB plan when #tables >= 9
-	if (query_graph_manager.relation_manager.NumRelations() >= 8) {
+	if (query_graph_manager.relation_manager.NumRelations() >= 12) {
 		GYO = false;
 	}
 

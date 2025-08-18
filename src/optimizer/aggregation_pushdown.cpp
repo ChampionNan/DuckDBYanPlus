@@ -268,7 +268,7 @@ unique_ptr<LogicalOperator> AggregationPushdown::ReplaceRootCountWithSum(unique_
             if (sum_function.name.empty()) {
                 sum_function.name = "sum";  // Explicitly set the name
             }        
-            // sum_function.return_type = LogicalType::HUGEINT;                
+            // sum_function.return_type = LogicalType::BIGINT;        
 
             FunctionBinder function_binder(context);
             auto sum_expr = function_binder.BindAggregateFunction(
@@ -394,6 +394,7 @@ unique_ptr<LogicalOperator> AggregationPushdown::ReplaceRootCountWithSum(unique_
                 if (sum_function.name.empty()) {
                     sum_function.name = "sum";  // Explicitly set the name
                 }
+                // sum_function.return_type = LogicalType::BIGINT;
                 FunctionBinder function_binder(context);
                 auto sum_expr = function_binder.BindAggregateFunction(
                     sum_function,
@@ -1143,7 +1144,7 @@ unique_ptr<LogicalOperator> AggregationPushdown::CreateDynamicAggregate(unique_p
             if (sum_function.name.empty()) {
                 sum_function.name = "sum";
             }
-
+            // sum_function.return_type = LogicalType::BIGINT;
             FunctionBinder function_binder(context);
             auto sum_expr = function_binder.BindAggregateFunction(
                 sum_function, 
@@ -1208,7 +1209,7 @@ unique_ptr<LogicalOperator> AggregationPushdown::CreateDynamicAggregate(unique_p
             if (sum_function.name.empty()) {
                 sum_function.name = "sum";
             }
-
+            // sum_function.return_type = LogicalType::BIGINT;
             FunctionBinder function_binder(context);
             auto sum_expr = function_binder.BindAggregateFunction(
                 sum_function, 

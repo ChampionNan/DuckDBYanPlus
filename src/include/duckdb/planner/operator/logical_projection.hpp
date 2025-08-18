@@ -29,6 +29,7 @@ public:
 
 	vector<idx_t> GetTableIndex() const override;
 	string GetName() const override;
+	InsertionOrderPreservingMap<string> ParamsToString() const override;
 
 protected:
 	void ResolveTypes() override;

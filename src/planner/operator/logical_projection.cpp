@@ -31,4 +31,9 @@ string LogicalProjection::GetName() const {
 	return LogicalOperator::GetName();
 }
 
+InsertionOrderPreservingMap<string> LogicalProjection::ParamsToString() const {
+	return LogicalOperator::ParamsToString();
+}
+
+
 } // namespace duckdb
