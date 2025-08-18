@@ -243,12 +243,17 @@ void Optimizer::RunBuiltInOptimizers() {
                 plan_copy = aggregation_pushdown.UpdateBinding(std::move(plan_copy));
             });
         }
+        RunOptimizer(OptimizerType::UNUSED_COLUMNS, [&]() {
+            RemoveUnusedColumns unused(binder, context, true);
+            unused.VisitOperatorBottomUp(*plan_copy);
+        });
+        /*
         column_binding_map_t<unique_ptr<BaseStatistics>> statistics_map_;
 	    RunOptimizer(OptimizerType::STATISTICS_PROPAGATION, [&]() {
 	 	    StatisticsPropagator propagator(*this, *plan_copy);
 	 	    propagator.PropagateStatistics(plan_copy);
 	 	    statistics_map_ = propagator.GetStatisticsMap();
-	    });
+	    });*/
         std::cout << "2. Before ApplyAgg without pruning " << std::endl;
         plan->Print();
         // Step2: Use the record to apply the real aggre prune to the plan
@@ -354,7 +359,7 @@ void Optimizer::RunBuiltInOptimizers() {
 		LateMaterialization late_materialization(*this);
 		plan = late_materialization.Optimize(std::move(plan));
 	});
-#ifndef YANPLUS
+//#ifndef YANPLUS
 	// perform statistics propagation
 	column_binding_map_t<unique_ptr<BaseStatistics>> statistics_map;
 	RunOptimizer(OptimizerType::STATISTICS_PROPAGATION, [&]() {
@@ -362,7 +367,7 @@ void Optimizer::RunBuiltInOptimizers() {
 		propagator.PropagateStatistics(plan);
 		statistics_map = propagator.GetStatisticsMap();
 	});
-#endif
+//#endif
 
 	// remove duplicate aggregates
 	RunOptimizer(OptimizerType::COMMON_AGGREGATE, [&]() {
