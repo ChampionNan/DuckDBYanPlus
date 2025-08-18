@@ -455,6 +455,8 @@ bool AggregationPushdown::CheckPKFK(LogicalOperator* op) {
 
     if (op->type == LogicalOperatorType::LOGICAL_FILTER && op->children.size() == 1 && op->children[0]->type == LogicalOperatorType::LOGICAL_GET) {
         return CheckPKFK(op->children[0].get());
+    } else if (op->type == LogicalOperatorType::LOGICAL_FILTER && op->children.size() == 1 && op->children[0]->type != LogicalOperatorType::LOGICAL_GET) {
+        return false;
     }
 
     // Get all column bindings for this operator
@@ -541,9 +543,14 @@ unique_ptr<LogicalOperator> AggregationPushdown::AddAnnotAttributeDFS(unique_ptr
         op_node->type == LogicalOperatorType::LOGICAL_DELIM_JOIN) {
         
         auto &join = op_node->Cast<LogicalComparisonJoin>();
-        
-        // join.children[0] = AddAnnotAttributeDFS(std::move(join.children[0]));
-        // join.children[1] = AddAnnotAttributeDFS(std::move(join.children[1]));
+
+        // NOTE: Skip for MARK joi type
+        if (join.join_type == JoinType::MARK) {
+            if (applyFlag) {
+                current_join_id++;
+            }
+            return std::move(op_node);  // Return without processing
+        }
 
         bool addLeft = true;
         bool addRight = true;
@@ -552,13 +559,11 @@ unique_ptr<LogicalOperator> AggregationPushdown::AddAnnotAttributeDFS(unique_ptr
         // Check if any column from left child is a unique key
         if (CheckPKFK(join.children[0].get())) {
             addLeft = false;
-            // std::cout << "Left child has unique key, skipping annot" << std::endl;
         }
         
         // Check if any column from right child is a unique key
         if (CheckPKFK(join.children[1].get())) {
             addRight = false;
-            // std::cout << "Right child has unique key, skipping annot" << std::endl;
         }
 
         if (applyFlag) {
@@ -1952,9 +1957,15 @@ void AggregationPushdown::RecordAggPushdown(unique_ptr<LogicalOperator>& op) {
         op->type == LogicalOperatorType::LOGICAL_DELIM_JOIN) {
 
         auto &join = op->Cast<LogicalComparisonJoin>();
+
+        if (join.join_type == JoinType::MARK) {
+            join_pushdown_info.push_back({join_counter++, false, false});
+            return;
+        }
+
         bool left = false, right = false;
 
-        op->Print();
+        // op->Print();
 
         if (join.children[0]->type == LogicalOperatorType::LOGICAL_PROJECTION) {
             left = AggPruneRules(join.children[0]);
