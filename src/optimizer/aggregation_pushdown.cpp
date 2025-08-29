@@ -555,7 +555,7 @@ unique_ptr<LogicalOperator> AggregationPushdown::AddAnnotAttributeDFS(unique_ptr
         bool addLeft = true;
         bool addRight = true;
         
-        op_node->Print();
+        // op_node->Print();
         // Check if any column from left child is a unique key
         if (CheckPKFK(join.children[0].get())) {
             addLeft = false;
@@ -1959,7 +1959,7 @@ void AggregationPushdown::RecordAggPushdown(unique_ptr<LogicalOperator>& op) {
         auto &join = op->Cast<LogicalComparisonJoin>();
 
         std::cout << "RecordAggPushdown: \n";
-        op->Print();
+        // op->Print();
 
         if (join.join_type == JoinType::MARK) {
             join_pushdown_info.push_back({join_counter++, false, false});

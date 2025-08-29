@@ -367,4 +367,5 @@ tools/pythonpkg/duckdb_build/i
 *_db*
 *test*
 *.txt
+tpch_100/*
 

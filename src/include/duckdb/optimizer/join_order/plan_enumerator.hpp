@@ -121,7 +121,8 @@ private:
         idx_t witness_relation_idx;  // Index of the witness relation
     };
     vector<GYOReductionStep> gyo_reduction_sequence;
-	column_binding_set_t output_variables;
+	column_binding_set_t output_variables;// All output variables
+	column_binding_set_t marker_bindings; // output variables not in join condition
 };
 
 } // namespace duckdb

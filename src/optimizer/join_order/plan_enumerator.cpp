@@ -3,6 +3,8 @@
 #include "duckdb/main/client_context.hpp"
 #include "duckdb/optimizer/join_order/join_node.hpp"
 #include "duckdb/optimizer/join_order/query_graph_manager.hpp"
+#include "duckdb/planner/operator/logical_aggregate.hpp"
+#include "duckdb/planner/expression/bound_aggregate_expression.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -593,17 +595,58 @@ void PlanEnumerator::SolveJoinOrderFixed(vector<LogicalOperator*> &exec_order) {
 }
 
 void PlanEnumerator::GetOutputVariables() {
+    output_variables.clear();
     auto logical_plan = root_op;
-    if (logical_plan && logical_plan->type == LogicalOperatorType::LOGICAL_PROJECTION) {
-        // Directly access expressions from LogicalOperator base class
-        for (auto& expression : logical_plan->expressions) {
-            if (expression->type == ExpressionType::BOUND_COLUMN_REF) {
-                auto col_ref = reinterpret_cast<BoundColumnRefExpression*>(expression.get());
-                output_variables.insert(col_ref->binding);
+    if (!logical_plan) {
+        std::cout << "Warning: No root operator provided!" << std::endl;
+        return;
+    }
+    if (logical_plan->type == LogicalOperatorType::LOGICAL_PROJECTION) {
+        // Check the child operator
+        if (!logical_plan->children.empty()) {
+            auto &child = logical_plan->children[0];
+            if (child->type == LogicalOperatorType::LOGICAL_AGGREGATE_AND_GROUP_BY) {
+                // Output variables come from aggregation operator
+                auto &agg = child->Cast<LogicalAggregate>();
+                // Add group columns
+                for (auto &group_expr : agg.groups) {
+                    if (group_expr->type == ExpressionType::BOUND_COLUMN_REF) {
+                        auto &col_ref = group_expr->Cast<BoundColumnRefExpression>();
+                        output_variables.insert(col_ref.binding);
+                    }
+                }
+                // Add aggregate columns
+                for (auto &agg_expr : agg.expressions) {
+                    if (agg_expr->type == ExpressionType::BOUND_COLUMN_REF) {
+                        auto &col_ref = agg_expr->Cast<BoundColumnRefExpression>();
+                        output_variables.insert(col_ref.binding);
+                    } else if (agg_expr->type == ExpressionType::BOUND_AGGREGATE) {
+        				auto &agg = agg_expr->Cast<BoundAggregateExpression>();
+        				for (auto &child : agg.children) {
+            				if (child->type == ExpressionType::BOUND_COLUMN_REF) {
+                				auto &col_ref = child->Cast<BoundColumnRefExpression>();
+                				output_variables.insert(col_ref.binding);
+            				}
+        				}
+    				}
+                }
+            } else if (child->type == LogicalOperatorType::LOGICAL_COMPARISON_JOIN ||
+                       child->type == LogicalOperatorType::LOGICAL_CROSS_PRODUCT) {
+                // Output variables come from projection operator
+                for (auto& expression : logical_plan->expressions) {
+                    if (expression->type == ExpressionType::BOUND_COLUMN_REF) {
+                        auto col_ref = reinterpret_cast<BoundColumnRefExpression*>(expression.get());
+                        output_variables.insert(col_ref->binding);
+                    }
+                }
             }
-			// TODO: Other types, and should record the root child node attrs
         }
     }
+    std::cout << "Output Variables: ";
+	for (auto &var : output_variables) {
+		std::cout << var.ToString() << " ";
+	}
+	std::cout << std::endl;
 }
 
 RelationalHypergraph PlanEnumerator::BuildRelationalHypergraph() {
@@ -615,6 +658,8 @@ RelationalHypergraph PlanEnumerator::BuildRelationalHypergraph() {
     // Map to track join equivalence classes
     column_binding_map_t<column_binding_set_t> equivalence_classes;
 
+	column_binding_set_t join_condition_bindings;
+
     // First pass: identify join equivalence classes
     for (auto& filter_info : query_graph_manager.GetFilterBindings()) {
         if (filter_info->filter->type == ExpressionType::COMPARE_EQUAL) {
@@ -625,8 +670,13 @@ RelationalHypergraph PlanEnumerator::BuildRelationalHypergraph() {
             // Make sure each binding is in its own equivalence class too
             equivalence_classes[filter_info->left_binding].insert(filter_info->left_binding);
             equivalence_classes[filter_info->right_binding].insert(filter_info->right_binding);
+
+			join_condition_bindings.insert(filter_info->left_binding);
+			join_condition_bindings.insert(filter_info->right_binding);
         }
     }
+
+
 
     // Merge equivalence classes transitively
     bool changes_made;
@@ -652,6 +702,12 @@ RelationalHypergraph PlanEnumerator::BuildRelationalHypergraph() {
         }
     } while (changes_made);
 
+    for (auto& output_binding : output_variables) {
+        if (join_condition_bindings.find(output_binding) == join_condition_bindings.end()) {
+            marker_bindings.insert(output_binding);
+        }
+    }
+
     // Assign the same vertex ID to all members of each equivalence class
     column_binding_map_t<idx_t> binding_to_vertex;
     for (auto& [binding, equiv_set] : equivalence_classes) {
@@ -672,6 +728,16 @@ RelationalHypergraph PlanEnumerator::BuildRelationalHypergraph() {
             graph.vertex_to_column.push_back(binding);
         }
     }
+
+	for (auto& marker_binding : marker_bindings) {
+		if (binding_to_vertex.find(marker_binding) == binding_to_vertex.end()) {
+			// Assign a new vertex ID to this marker binding
+			idx_t vertex_id = next_vertex_id++;
+			binding_to_vertex[marker_binding] = vertex_id;
+			graph.vertex_to_column.push_back(marker_binding);
+			graph.output_vertices.insert(vertex_id);
+		}
+	}
 
     // Transfer the final mapping
     graph.column_to_vertex = binding_to_vertex;
@@ -869,10 +935,18 @@ void PlanEnumerator::SolveJoinOrderGYO() {
 					if (graph.output_vertices.size() > 0) {
 						for (auto vertex : ear_relation) {
                             if (graph.output_vertices.find(vertex) != graph.output_vertices.end()) {
-                                output_vars_number += 1;
+								auto& binding = graph.vertex_to_column[vertex];
+								if (marker_bindings.find(binding) != marker_bindings.end()) {
+									// Output not on join conditon
+            						output_vars_number += 2;
+        						} else {
+									output_vars_number += 1;
+								}
                             }
                         }
 					}
+
+					std::cout << "output_vars_number: " << output_vars_number << std::endl;
 
                     // Store this candidate
                     EarCandidate candidate;
