@@ -594,11 +594,41 @@ void PlanEnumerator::SolveJoinOrderFixed(vector<LogicalOperator*> &exec_order) {
 	return ;
 }
 
+// Add this helper function to recursively find the actual query root
+LogicalOperator* PlanEnumerator::FindActualQueryRoot(LogicalOperator* op) {
+    if (!op) {
+        return nullptr;
+    }
+    
+    // Check if this is a meta-operator that wraps the actual query
+    switch (op->type) {
+    case LogicalOperatorType::LOGICAL_EXPLAIN:
+    case LogicalOperatorType::LOGICAL_COPY_TO_FILE:
+        // These are meta-operators, recursively check their children
+        if (!op->children.empty()) {
+            return FindActualQueryRoot(op->children[0].get());
+        }
+        return nullptr;
+    
+    case LogicalOperatorType::LOGICAL_PROJECTION:
+    case LogicalOperatorType::LOGICAL_AGGREGATE_AND_GROUP_BY:
+    case LogicalOperatorType::LOGICAL_COMPARISON_JOIN:
+    case LogicalOperatorType::LOGICAL_CROSS_PRODUCT:
+    case LogicalOperatorType::LOGICAL_GET:
+    case LogicalOperatorType::LOGICAL_FILTER:
+        // These are actual query operators
+        return op;
+    
+    default:
+        return op;
+    }
+}
+
 void PlanEnumerator::GetOutputVariables() {
     output_variables.clear();
-    auto logical_plan = root_op;
+    auto logical_plan = FindActualQueryRoot(root_op);
     if (!logical_plan) {
-        std::cout << "Warning: No root operator provided!" << std::endl;
+        std::cout << "Warning: No actual query root found!" << std::endl;
         return;
     }
     if (logical_plan->type == LogicalOperatorType::LOGICAL_PROJECTION) {
@@ -641,7 +671,10 @@ void PlanEnumerator::GetOutputVariables() {
                 }
             }
         }
-    }
+    } else {
+		std::cout << "Error: Unexpected top operator type: " << LogicalOperatorToString(logical_plan->type) << std::endl;
+
+	}
     std::cout << "Output Variables: ";
 	for (auto &var : output_variables) {
 		std::cout << var.ToString() << " ";

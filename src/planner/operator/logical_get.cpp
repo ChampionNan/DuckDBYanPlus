@@ -65,7 +65,7 @@ InsertionOrderPreservingMap<string> LogicalGet::ParamsToString() const {
             }
         }
     }
-	result["Projeciton"] = projection;
+	result["Projection"] = projection;
 
 	for (auto &kv : table_filters.filters) {
 		auto &column_index = kv.first;

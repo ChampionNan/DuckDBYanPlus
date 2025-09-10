@@ -113,6 +113,7 @@ public:
 	void GetOutputVariables();
 	bool IsEar(RelationalHypergraph& graph, idx_t relation_idx, idx_t& witness_idx);
 	RelationalHypergraph BuildRelationalHypergraph();
+	LogicalOperator* FindActualQueryRoot(LogicalOperator* op);
 
 private:
     // Reduction sequence for reconstructing the join tree

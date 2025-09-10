@@ -164,6 +164,8 @@ public:
 
     unique_ptr<LogicalOperator> PruneAggregation(unique_ptr<LogicalOperator> op, AggOptFunc func);
 
+    void UpdateExpressionBindings(Expression* expr);
+
     unique_ptr<LogicalOperator> PruneAggregationWithProjectionMap(unique_ptr<LogicalOperator> op);
 
     bool AggPruneRules(unique_ptr<LogicalOperator>& op);

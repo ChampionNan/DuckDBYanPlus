@@ -190,6 +190,9 @@ void Optimizer::RunBuiltInOptimizers() {
     std::cout << "Query Type: " << static_cast<int>(query_type) << std::endl;
     bool GYO = !(query_type == QueryType::OTHER);
 
+    std::cout << "0. Before Join Order" << std::endl;
+    plan->Print();
+
     // Step1: do the join ordering
     RunOptimizer(OptimizerType::JOIN_ORDER, [&]() {
 		JoinOrderOptimizer optimizer(context, GYO);
@@ -297,7 +300,7 @@ void Optimizer::RunBuiltInOptimizers() {
 
     std::cout << "5. After whole Agg-Pushdown Plan " << std::endl;
 	plan->Print();
-    // PrintOperatorBindings(plan.get());
+    PrintOperatorBindings(plan.get());
 
 	// rewrites UNNESTs in DelimJoins by moving them to the projection
 	RunOptimizer(OptimizerType::UNNEST_REWRITER, [&]() {
@@ -395,6 +398,7 @@ void Optimizer::RunBuiltInOptimizers() {
 
 	std::cout << "6. After All Optimizations Plan " << std::endl;
 	plan->Print();
+    PrintOperatorBindings(plan.get());
 }
 
 unique_ptr<LogicalOperator> Optimizer::Optimize(unique_ptr<LogicalOperator> plan_p) {
@@ -489,64 +493,36 @@ QueryType Optimizer::DetectQueryType(LogicalOperator* op) {
         op->children[0]->type == LogicalOperatorType::LOGICAL_AGGREGATE_AND_GROUP_BY) {
 
         auto& agg = op->children[0]->Cast<LogicalAggregate>();
+        auto& expr = agg.expressions[0];
+        bool is_count = false;
+        bool is_minmax = false;
+        bool is_sum = false;
 
-        // Check if this is a COUNT(*) aggregation (no GROUP BY, single expression)
-        if (agg.groups.empty() && agg.expressions.size() == 1) {
-            auto& expr = agg.expressions[0];
-
-            // Verify it's a COUNT(*) expression
-            if (expr->GetExpressionClass() == ExpressionClass::BOUND_AGGREGATE) {
-                auto& bound_agg = expr->Cast<BoundAggregateExpression>();
-
-                // Check if this is COUNT(*) or COUNT_STAR
-                if (bound_agg.function.name == "count_star" || 
-                    (bound_agg.function.name == "count" && bound_agg.children.empty())) {
-                    return QueryType::COUNT_STAR;
-                }
+        if (expr->GetExpressionClass() == ExpressionClass::BOUND_AGGREGATE) {
+            auto& bound_agg = expr->Cast<BoundAggregateExpression>();
+            // Check if this is COUNT(*) or COUNT_STAR
+            if (bound_agg.function.name == "count_star" || bound_agg.function.name == "count") {
+                is_count = true;
+            } 
+            if (bound_agg.function.name == "min" || bound_agg.function.name == "max") {
+                is_minmax = true;
+            }
+            if (bound_agg.function.name == "sum") {
+                is_sum = true;
             }
         }
-    }
-
-    // Case 3: SELECT MIN(a), MAX(b) FROM table; Or SELECT SUM(a) FROM table [GROUP BY];
-    // Also projection over aggregate, but with MIN/MAX functions
-    if (op->type == LogicalOperatorType::LOGICAL_PROJECTION && 
-        op->children.size() == 1 && 
-        op->children[0]->type == LogicalOperatorType::LOGICAL_AGGREGATE_AND_GROUP_BY) {
-
-        auto& agg = op->children[0]->Cast<LogicalAggregate>();
-
-        // Check if this has no GROUP BY
-        if (agg.groups.empty() && !agg.expressions.empty()) {
-            bool is_minmax_aggregate = true;
-            bool is_sum_aggregate = true;
-
-            // Check all aggregate expressions
-            for (auto& expr : agg.expressions) {
-                if (expr->GetExpressionClass() == ExpressionClass::BOUND_AGGREGATE) {
-                    auto& bound_agg = expr->Cast<BoundAggregateExpression>();
-                    // Only MIN, MAX allowed for simple aggregate type
-                    if (bound_agg.function.name != "min" && 
-                        bound_agg.function.name != "max") {
-                        is_minmax_aggregate = false;
-                    } else if (bound_agg.function.name != "sum") {
-                        is_sum_aggregate = false;
-                    }
-                } else {
-                    is_minmax_aggregate = false;
-                    is_sum_aggregate = false;
-                    break;
-                }
-            }
-
-            if (is_minmax_aggregate) {
-                return QueryType::MINMAX_AGGREGATE;
-            } else if (is_sum_aggregate) {
-                // If we have SUM, we can still consider it a minmax aggregate
-                return QueryType::SUM;
-            } else {
-                // If we have other aggregates, it's not a simple minmax aggregate
-                return QueryType::OTHER;
-            }
+        if (is_count) {
+            if (is_minmax || is_sum) 
+                throw NotImplementedException("Mixed aggregate functions not supported in query type detection.");
+            return QueryType::COUNT_STAR;
+        } else if (is_minmax) {
+            if (is_count || is_sum) 
+                throw NotImplementedException("Mixed aggregate functions not supported in query type detection.");
+            return QueryType::MINMAX_AGGREGATE;
+        } else if (is_sum) {
+            if (is_count || is_minmax) 
+                throw NotImplementedException("Mixed aggregate functions not supported in query type detection.");
+            return QueryType::SUM;
         }
     }
 
