@@ -300,7 +300,7 @@ void Optimizer::RunBuiltInOptimizers() {
 
     std::cout << "5. After whole Agg-Pushdown Plan " << std::endl;
 	plan->Print();
-    PrintOperatorBindings(plan.get());
+    // PrintOperatorBindings(plan.get());
 
 	// rewrites UNNESTs in DelimJoins by moving them to the projection
 	RunOptimizer(OptimizerType::UNNEST_REWRITER, [&]() {
@@ -362,7 +362,7 @@ void Optimizer::RunBuiltInOptimizers() {
 		LateMaterialization late_materialization(*this);
 		plan = late_materialization.Optimize(std::move(plan));
 	});
-//#ifndef YANPLUS
+
 	// perform statistics propagation
 	column_binding_map_t<unique_ptr<BaseStatistics>> statistics_map;
 	RunOptimizer(OptimizerType::STATISTICS_PROPAGATION, [&]() {
@@ -370,7 +370,7 @@ void Optimizer::RunBuiltInOptimizers() {
 		propagator.PropagateStatistics(plan);
 		statistics_map = propagator.GetStatisticsMap();
 	});
-//#endif
+
 
 	// remove duplicate aggregates
 	RunOptimizer(OptimizerType::COMMON_AGGREGATE, [&]() {
@@ -398,7 +398,7 @@ void Optimizer::RunBuiltInOptimizers() {
 
 	std::cout << "6. After All Optimizations Plan " << std::endl;
 	plan->Print();
-    PrintOperatorBindings(plan.get());
+    // PrintOperatorBindings(plan.get());
 }
 
 unique_ptr<LogicalOperator> Optimizer::Optimize(unique_ptr<LogicalOperator> plan_p) {
@@ -477,6 +477,9 @@ bool Optimizer::HasJoins(LogicalOperator* op) {
 
 
 QueryType Optimizer::DetectQueryType(LogicalOperator* op) {
+    std::cout << "Print operator type:" << std::endl;
+    std::cout << LogicalOperatorToString(op->type) << std::endl;
+
     bool has_joins = HasJoins(op);
     if (!op || !has_joins) {
         return QueryType::OTHER;

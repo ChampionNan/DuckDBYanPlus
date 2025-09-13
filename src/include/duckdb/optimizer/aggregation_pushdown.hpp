@@ -122,6 +122,8 @@ public:
 
     void StoreSumAggregates(LogicalOperator* op);
 
+    void StoreDistinctAggregates(LogicalOperator* op);
+
     unique_ptr<LogicalOperator> ReplaceRootCountWithSum(unique_ptr<LogicalOperator> op_node);
 
     unique_ptr<LogicalOperator> AddAnnotAttributeDFS(unique_ptr<LogicalOperator> op_node, bool applyFlag = false);
@@ -191,9 +193,10 @@ private:
     QueryType query_type;
 
     std::unordered_map<ColumnBinding, ColumnBinding, ColumnBindingHashFunction> global_binding_map;
-    static vector<AggColumnInfo> minmax_columns;  // Store MIN/MAX column info
-    static vector<SumAggInfo> sum_aggregates; // Store SUM aggregate info
-    static unordered_set<string> alias_set;  // Fast lookup set for all aliases
+    vector<AggColumnInfo> groupby_columns;             // Store the column biding in group by part
+    static vector<SumAggInfo> sum_aggregates;       // Store SUM aggregate info
+    static vector<AggColumnInfo> minmax_columns;    // Store MIN/MAX column info
+    static unordered_set<string> alias_set;         // Fast lookup set for all aliases
     static vector<JoinInfo> join_pushdown_info;
 };
 

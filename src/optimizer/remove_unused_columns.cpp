@@ -391,6 +391,9 @@ void RemoveUnusedColumns::GetUpdateBinding(Expression &expr) {
 	} else if (expr.GetExpressionClass() == ExpressionClass::BOUND_CAST) {
         auto &cast = expr.Cast<BoundCastExpression>();
         GetUpdateBinding(*cast.child);
+    } else if (expr.GetExpressionClass() == ExpressionClass::BOUND_CONSTANT) {
+        // Constants don't have column bindings - skip them
+        return;
     } else {
         throw NotImplementedException("GetUpdateBinding not implemented for expression class %d", expr.GetExpressionClass());
     }

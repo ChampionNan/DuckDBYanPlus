@@ -114,6 +114,7 @@ public:
 	bool IsEar(RelationalHypergraph& graph, idx_t relation_idx, idx_t& witness_idx);
 	RelationalHypergraph BuildRelationalHypergraph();
 	LogicalOperator* FindActualQueryRoot(LogicalOperator* op);
+	void ExtractColumnBindingsFromExpression(Expression* expr);
 
 private:
     // Reduction sequence for reconstructing the join tree

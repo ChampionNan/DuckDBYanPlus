@@ -4,7 +4,7 @@
 #include "duckdb/optimizer/join_order/join_node.hpp"
 #include "duckdb/optimizer/join_order/query_graph_manager.hpp"
 #include "duckdb/planner/operator/logical_aggregate.hpp"
-#include "duckdb/planner/expression/bound_aggregate_expression.hpp"
+#include "duckdb/planner/expression/list.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -624,6 +624,71 @@ LogicalOperator* PlanEnumerator::FindActualQueryRoot(LogicalOperator* op) {
     }
 }
 
+void PlanEnumerator::ExtractColumnBindingsFromExpression(Expression* expr) {
+    if (!expr) return;
+    
+    switch (expr->GetExpressionClass()) {
+        case ExpressionClass::BOUND_COLUMN_REF: {
+            auto &col_ref = expr->Cast<BoundColumnRefExpression>();
+            output_variables.insert(col_ref.binding);
+            break;
+        }
+        case ExpressionClass::BOUND_AGGREGATE: {
+            auto &agg = expr->Cast<BoundAggregateExpression>();
+            for (auto &child : agg.children) {
+                ExtractColumnBindingsFromExpression(child.get());
+            }
+            break;
+        }
+        case ExpressionClass::BOUND_FUNCTION: {
+            auto &func_expr = expr->Cast<BoundFunctionExpression>();
+            // Recursively extract from all children
+            for (auto &child : func_expr.children) {
+                ExtractColumnBindingsFromExpression(child.get());
+            }
+            break;
+        }
+        case ExpressionClass::BOUND_CAST: {
+            auto &cast_expr = expr->Cast<BoundCastExpression>();
+            // Extract from the child expression
+            ExtractColumnBindingsFromExpression(cast_expr.child.get());
+            break;
+        }
+        case ExpressionClass::BOUND_CASE: {
+            auto &case_expr = expr->Cast<BoundCaseExpression>();
+            
+            // Process case conditions and results
+            for (auto &case_check : case_expr.case_checks) {
+                ExtractColumnBindingsFromExpression(case_check.when_expr.get());
+                ExtractColumnBindingsFromExpression(case_check.then_expr.get());
+            }
+            
+            // Process else expression
+            if (case_expr.else_expr) {
+                ExtractColumnBindingsFromExpression(case_expr.else_expr.get());
+            }
+            break;
+        }
+        case ExpressionClass::BOUND_COMPARISON: {
+            auto &comp_expr = expr->Cast<BoundComparisonExpression>();
+            // Extract from both sides of the comparison
+            ExtractColumnBindingsFromExpression(comp_expr.left.get());
+            ExtractColumnBindingsFromExpression(comp_expr.right.get());
+            break;
+        }
+        case ExpressionClass::BOUND_CONSTANT: {
+            // Constants don't contain column references - skip
+            break;
+        }
+        default: {
+            // Log warning for unsupported expression types
+            std::cout << "WARNING: Unsupported expression type in ExtractColumnBindingsFromExpression: " 
+                     << static_cast<int>(expr->GetExpressionClass()) << std::endl;
+            break;
+        }
+    }
+}
+
 void PlanEnumerator::GetOutputVariables() {
     output_variables.clear();
     auto logical_plan = FindActualQueryRoot(root_op);
@@ -640,34 +705,17 @@ void PlanEnumerator::GetOutputVariables() {
                 auto &agg = child->Cast<LogicalAggregate>();
                 // Add group columns
                 for (auto &group_expr : agg.groups) {
-                    if (group_expr->type == ExpressionType::BOUND_COLUMN_REF) {
-                        auto &col_ref = group_expr->Cast<BoundColumnRefExpression>();
-                        output_variables.insert(col_ref.binding);
-                    }
+                    ExtractColumnBindingsFromExpression(group_expr.get());
                 }
                 // Add aggregate columns
                 for (auto &agg_expr : agg.expressions) {
-                    if (agg_expr->type == ExpressionType::BOUND_COLUMN_REF) {
-                        auto &col_ref = agg_expr->Cast<BoundColumnRefExpression>();
-                        output_variables.insert(col_ref.binding);
-                    } else if (agg_expr->type == ExpressionType::BOUND_AGGREGATE) {
-        				auto &agg = agg_expr->Cast<BoundAggregateExpression>();
-        				for (auto &child : agg.children) {
-            				if (child->type == ExpressionType::BOUND_COLUMN_REF) {
-                				auto &col_ref = child->Cast<BoundColumnRefExpression>();
-                				output_variables.insert(col_ref.binding);
-            				}
-        				}
-    				}
+                    ExtractColumnBindingsFromExpression(agg_expr.get());
                 }
             } else if (child->type == LogicalOperatorType::LOGICAL_COMPARISON_JOIN ||
                        child->type == LogicalOperatorType::LOGICAL_CROSS_PRODUCT) {
                 // Output variables come from projection operator
                 for (auto& expression : logical_plan->expressions) {
-                    if (expression->type == ExpressionType::BOUND_COLUMN_REF) {
-                        auto col_ref = reinterpret_cast<BoundColumnRefExpression*>(expression.get());
-                        output_variables.insert(col_ref->binding);
-                    }
+                    ExtractColumnBindingsFromExpression(expression.get());
                 }
             }
         }
@@ -962,7 +1010,7 @@ void PlanEnumerator::SolveJoinOrderGYO() {
                     auto join_node = CreateJoinTree(union_set, connections, *ear_plan->second, *witness_plan->second);
                     double cost = join_node->cost;
 
-					idx_t output_vars_number = 0;
+					idx_t output_vars_number = 1;
                     const auto& ear_relation = graph.relations[i];
 
 					if (graph.output_vertices.size() > 0) {
@@ -971,10 +1019,8 @@ void PlanEnumerator::SolveJoinOrderGYO() {
 								auto& binding = graph.vertex_to_column[vertex];
 								if (marker_bindings.find(binding) != marker_bindings.end()) {
 									// Output not on join conditon
-            						output_vars_number += 2;
-        						} else {
-									output_vars_number += 1;
-								}
+            						output_vars_number += 1;
+        						}
                             }
                         }
 					}
@@ -1003,6 +1049,7 @@ void PlanEnumerator::SolveJoinOrderGYO() {
 						return a.output_variables_number < b.output_variables_number; // Prefer candidates with output variables
 					}
 					return a.cost < b.cost; // Otherwise, choose the one with lower cost
+					// return a.cost * a.output_variables_number < b.cost * b.output_variables_number; // Choose the one with lower cost
                 });
 
             // Apply the best reduction step
