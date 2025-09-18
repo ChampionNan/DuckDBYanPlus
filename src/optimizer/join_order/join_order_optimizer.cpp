@@ -150,17 +150,23 @@ unique_ptr<LogicalOperator> JoinOrderOptimizer::CallSolveJoinOrderFixed(unique_p
 				// now reconstruct a logical plan from the query graph plan
 				query_graph_manager.plans = &plan_enumerator.GetPlans();
 				new_logical_plan = query_graph_manager.Reconstruct(std::move(plan));
+#ifdef DEBUG 
 				std::cout << "GYO join tree found and reconstructed! " << std::endl;
+#endif
 			} catch (...) {
 				// Unable to handle with GYO
+#ifdef DEBUG
 				std::cout << "GYO join tree not found! " << std::endl;
+#endif
 				GYO = false;
 			}
 		}
 	}
 
 	if (!GYO || !new_logical_plan){
+#ifdef DEBUG
 		std::cout << "CallSolveJoinOrderFixed Failed and fall back to DuckDB implementation! " << std::endl;
+#endif
 		// Create a completely fresh optimizer with clean state
         JoinOrderOptimizer fallback_optimizer(context);  // false = no GYO for fallback
         return fallback_optimizer.Optimize(std::move(plan_backup));

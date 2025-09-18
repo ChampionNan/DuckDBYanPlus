@@ -723,11 +723,13 @@ void PlanEnumerator::GetOutputVariables() {
 		std::cout << "Error: Unexpected top operator type: " << LogicalOperatorToString(logical_plan->type) << std::endl;
 
 	}
+#ifdef DEBUG
     std::cout << "Output Variables: ";
 	for (auto &var : output_variables) {
 		std::cout << var.ToString() << " ";
 	}
 	std::cout << std::endl;
+#endif
 }
 
 RelationalHypergraph PlanEnumerator::BuildRelationalHypergraph() {
@@ -1025,7 +1027,7 @@ void PlanEnumerator::SolveJoinOrderGYO() {
                         }
 					}
 
-					std::cout << "output_vars_number: " << output_vars_number << std::endl;
+					// std::cout << "output_vars_number: " << output_vars_number << std::endl;
 
                     // Store this candidate
                     EarCandidate candidate;

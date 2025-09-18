@@ -53,8 +53,8 @@ protected:
 //! The RemoveUnusedColumns optimizer traverses the logical operator tree and removes any columns that are not required
 class RemoveUnusedColumns : public BaseColumnPruner {
 public:
-	RemoveUnusedColumns(Binder &binder, ClientContext &context, bool is_root = false)
-	    : binder(binder), context(context), everything_referenced(is_root) {
+	RemoveUnusedColumns(Binder &binder, ClientContext &context, bool is_root = false, bool root_distinct_pruning = false)
+	    : binder(binder), context(context), everything_referenced(is_root), root_distinct_pruning(root_distinct_pruning) {
 	}
 
 	void VisitOperator(LogicalOperator &op) override;
@@ -67,6 +67,7 @@ private:
 	//! Whether or not all the columns are referenced. This happens in the case of the root expression (because the
 	//! output implicitly refers all the columns below it)
 	bool everything_referenced;
+	bool root_distinct_pruning;
 
 private:
 	template <class T>

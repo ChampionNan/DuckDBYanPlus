@@ -313,7 +313,26 @@ void RemoveUnusedColumns::VisitOperator(LogicalOperator &op) {
 		// distinct, all projected columns are used for the DISTINCT computation
 		// mark all columns as used and continue to the children
 		// FIXME: DISTINCT with expression list does not implicitly reference everything
-		everything_referenced = true;
+		if (root_distinct_pruning) {
+			everything_referenced = true;
+		} else {
+			if (!everything_referenced) {
+				for (idx_t i = 0; i < distinct.distinct_targets.size(); i++) {
+					auto &target = distinct.distinct_targets[i];
+					bool is_referenced = false;
+					if (target->expression_class == ExpressionClass::BOUND_COLUMN_REF) {
+						auto &colref = target->Cast<BoundColumnRefExpression>();
+						auto exist_flag = column_references.find(colref.binding);
+						is_referenced = (exist_flag != column_references.end());
+					}
+
+					if (!is_referenced) {
+						distinct.distinct_targets.erase(distinct.distinct_targets.begin() + i);
+						i--;
+					}
+				}
+			}
+		}
 		break;
 	}
 	case LogicalOperatorType::LOGICAL_RECURSIVE_CTE:

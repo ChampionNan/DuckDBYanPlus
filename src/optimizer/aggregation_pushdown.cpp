@@ -105,7 +105,7 @@ unique_ptr<LogicalOperator> AggregationPushdown::ApplyAgg(unique_ptr<LogicalOper
     sum_aggregates.clear();
     if (query_type == QueryType::MINMAX_AGGREGATE) {
         StoreMinMaxAggregates(op->children[0].get());
-    } else if (query_type == QueryType::SUM || query_type == QueryType::SELECT_DISTINCT) {
+    } else if (query_type == QueryType::SUM) {
         StoreSumAggregates(op->children[0].get());
     } else if (query_type == QueryType::SELECT_DISTINCT) {
         StoreDistinctAggregates(op.get());
@@ -118,11 +118,7 @@ unique_ptr<LogicalOperator> AggregationPushdown::ApplyAgg(unique_ptr<LogicalOper
 // Part2
 unique_ptr<LogicalOperator> AggregationPushdown::UpdateBinding(unique_ptr<LogicalOperator> op) {
     op = PruneAggregation(std::move(op), &AggregationPushdown::PruneAggregationWithProjectionMap);
-    // std::cout << "After PruneAggregationWithProjectionMap! " << std::endl;
-    // op->Print();
     op = UpdateAnnotMul(std::move(op));
-    // std::cout << "After UpdateAnnotMul! " << std::endl;
-    // op->Print();
     return op;
 }
 
@@ -295,12 +291,11 @@ unique_ptr<LogicalOperator> AggregationPushdown::ReplaceRootCountWithSum(unique_
         return op_node;
     }
 
-    auto &agg = op_node->children[0]->Cast<LogicalAggregate>();
-    auto child_bindings = agg.children[0]->GetColumnBindings();
-    auto child_types = agg.children[0]->types;
-
     // Check if this is the root aggregate with COUNT(*)
     if (query_type == QueryType::COUNT_STAR) {
+        auto &agg = op_node->children[0]->Cast<LogicalAggregate>();
+        auto child_bindings = agg.children[0]->GetColumnBindings();
+        auto child_types = agg.children[0]->types;
         // Search for annot column in the child
         ColumnBinding annot_binding;
         LogicalType annot_type; // Default, adjust if needed
@@ -369,6 +364,10 @@ unique_ptr<LogicalOperator> AggregationPushdown::ReplaceRootCountWithSum(unique_
             return op_node;
         }
     } else if (query_type == QueryType::MINMAX_AGGREGATE) {
+        auto &agg = op_node->children[0]->Cast<LogicalAggregate>();
+        auto child_bindings = agg.children[0]->GetColumnBindings();
+        auto child_types = agg.children[0]->types;
+
         vector<unique_ptr<Expression>> agg_expressions;
 
         for (const auto& info : minmax_columns) {
@@ -431,6 +430,9 @@ unique_ptr<LogicalOperator> AggregationPushdown::ReplaceRootCountWithSum(unique_
         return op_node;
 
     } else if (query_type == QueryType::SUM) {
+        auto &agg = op_node->children[0]->Cast<LogicalAggregate>();
+        auto child_bindings = agg.children[0]->GetColumnBindings();
+        auto child_types = agg.children[0]->types;
         vector<unique_ptr<Expression>> agg_expressions;
         for (auto const& sum_info : sum_aggregates) {
             bool found_result_column = false;
@@ -1183,8 +1185,16 @@ unique_ptr<LogicalOperator> AggregationPushdown::CreateDynamicAggregate(unique_p
 
     // Do process for distinct at the beginning
     if (query_type == QueryType::SELECT_DISTINCT) {
-        auto distinct = make_uniq<LogicalDistinct>();
-        distinct->distinct_type = DistinctType::DISTINCT;
+        vector<unique_ptr<Expression>> distinct_targets;
+        for (idx_t i = 0; i < child_bindings.size(); i++) {
+            auto col_ref = make_uniq<BoundColumnRefExpression>(
+                child_types[i],
+                child_bindings[i]
+            );
+            distinct_targets.push_back(std::move(col_ref));
+        }
+
+        auto distinct = make_uniq<LogicalDistinct>(std::move(distinct_targets), DistinctType::DISTINCT);
     
         // Add child node
         distinct->AddChild(std::move(child_node));
@@ -1807,8 +1817,6 @@ void AggregationPushdown::UpdateExpressionBindings(Expression* expr) {
 // Use for each level duckdb prune columns, this method prune columns for new added aggregation operator
 unique_ptr<LogicalOperator> AggregationPushdown::PruneAggregationWithProjectionMap(unique_ptr<LogicalOperator> op) {
     // Get references to all operators in the chain
-    // std::cout << "PruneAggregationWithProjectionMap" << std::endl;
-    // op->Print();
     auto &top_proj = op->Cast<LogicalProjection>();
     bool has_middle_agg = (op->children.size() == 1 && op->children[0]->type == LogicalOperatorType::LOGICAL_AGGREGATE_AND_GROUP_BY);
     if (!has_middle_agg) {
@@ -2111,9 +2119,9 @@ bool AggregationPushdown::AggPruneRules(unique_ptr<LogicalOperator>& op) {
             return true;
         }
     } else if (op->type == LogicalOperatorType::LOGICAL_DISTINCT) {
-        auto &distinct = op->children[0]->Cast<LogicalDistinct>();
-
-        if (distinct.children[0]->types.size() <= GROUP_BY_NUM) {
+        auto &distinct = op->Cast<LogicalDistinct>();
+        std::cout << "Distinct targets: " << distinct.distinct_targets.size() << std::endl;
+        if (distinct.distinct_targets.size() <= GROUP_BY_NUM) {
             return true;
         }
     }
@@ -2135,9 +2143,6 @@ void AggregationPushdown::RecordAggPushdown(unique_ptr<LogicalOperator>& op) {
 
         auto &join = op->Cast<LogicalComparisonJoin>();
 
-        std::cout << "RecordAggPushdown: \n";
-        // op->Print();
-
         if (join.join_type == JoinType::MARK) {
             join_pushdown_info.push_back({join_counter++, false, false});
             return;
@@ -2145,14 +2150,13 @@ void AggregationPushdown::RecordAggPushdown(unique_ptr<LogicalOperator>& op) {
 
         bool left = false, right = false;
 
-        // op->Print();
-
         if (join.children[0]->type == LogicalOperatorType::LOGICAL_PROJECTION || join.children[0]->type == LogicalOperatorType::LOGICAL_DISTINCT) {
             left = AggPruneRules(join.children[0]);
         }
-        if (join.children[1]->type == LogicalOperatorType::LOGICAL_PROJECTION || join.children[0]->type == LogicalOperatorType::LOGICAL_DISTINCT) {
+        if (join.children[1]->type == LogicalOperatorType::LOGICAL_PROJECTION || join.children[1]->type == LogicalOperatorType::LOGICAL_DISTINCT) {
             right = AggPruneRules(join.children[1]);
         }
+
         join_pushdown_info.push_back({join_counter++, left, right});
     }
 }
