@@ -3,8 +3,9 @@
 #include "duckdb/main/client_context.hpp"
 #include "duckdb/optimizer/join_order/join_node.hpp"
 #include "duckdb/optimizer/join_order/query_graph_manager.hpp"
-#include "duckdb/planner/operator/logical_aggregate.hpp"
 #include "duckdb/planner/expression/list.hpp"
+#include "duckdb/planner/operator/logical_aggregate.hpp"
+#include "duckdb/planner/operator/logical_distinct.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -719,10 +720,14 @@ void PlanEnumerator::GetOutputVariables() {
                 }
             }
         }
+    } else if (logical_plan->type == LogicalOperatorType::LOGICAL_DISTINCT) {
+        auto &distinct = logical_plan->Cast<LogicalDistinct>();
+        for (auto &distinct_target : distinct.distinct_targets) {
+            ExtractColumnBindingsFromExpression(distinct_target.get());
+        }
     } else {
-		std::cout << "Error: Unexpected top operator type: " << LogicalOperatorToString(logical_plan->type) << std::endl;
-
-	}
+        std::cout << "Error: Unexpected top operator type: " << LogicalOperatorToString(logical_plan->type) << std::endl;
+    }
 #ifdef DEBUG
     std::cout << "Output Variables: ";
 	for (auto &var : output_variables) {

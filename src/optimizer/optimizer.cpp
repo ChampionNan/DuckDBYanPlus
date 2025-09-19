@@ -315,11 +315,9 @@ void Optimizer::RunBuiltInOptimizers() {
         plan = std::move(plan_original);
     }
 #endif // YANPLUS
-#ifdef DEBUG
     std::cout << "5. After whole Agg-Pushdown Plan " << std::endl;
 	plan->Print();
     // PrintOperatorBindings(plan.get());
-#endif
 	// rewrites UNNESTs in DelimJoins by moving them to the projection
 	RunOptimizer(OptimizerType::UNNEST_REWRITER, [&]() {
 		UnnestRewriter unnest_rewriter;
@@ -413,11 +411,9 @@ void Optimizer::RunBuiltInOptimizers() {
 		JoinFilterPushdownOptimizer join_filter_pushdown(*this);
 		join_filter_pushdown.VisitOperator(*plan);
 	});
-#ifdef DEBUG
 	std::cout << "6. After All Optimizations Plan " << std::endl;
 	plan->Print();
     // PrintOperatorBindings(plan.get());
-#endif
 }
 
 unique_ptr<LogicalOperator> Optimizer::Optimize(unique_ptr<LogicalOperator> plan_p) {
