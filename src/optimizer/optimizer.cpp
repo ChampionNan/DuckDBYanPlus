@@ -319,7 +319,7 @@ void Optimizer::RunBuiltInOptimizers() {
 #endif // YANPLUS
     std::cout << "5. After whole Agg-Pushdown Plan " << std::endl;
 	plan->Print();
-    // PrintOperatorBindings(plan.get());
+    PrintOperatorBindings(plan.get());
 	// rewrites UNNESTs in DelimJoins by moving them to the projection
 	RunOptimizer(OptimizerType::UNNEST_REWRITER, [&]() {
 		UnnestRewriter unnest_rewriter;
