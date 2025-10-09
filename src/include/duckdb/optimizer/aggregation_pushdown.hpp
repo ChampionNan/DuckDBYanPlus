@@ -19,12 +19,12 @@ class Binder;
 
 // Add this to the AggregationPushdown class in aggregation_pushdown.hpp
 enum class QueryType {
-    SELECT_STAR,         // SELECT * FROM 
-    SELECT_DISTINCT,      // SELECT DISTINCT a FROM 
-    COUNT_STAR,         // SELECT COUNT(*) FROM (no GROUP BY)
-    MINMAX_AGGREGATE,   // SELECT MIN(a), MAX(b) FROM (no GROUP BY)
-    SUM,              // SELECT SUM(a) FROM
-    OTHER               // Any other query pattern
+    SELECT_STAR,            // 0, SELECT * FROM 
+    SELECT_DISTINCT,        // 1, SELECT DISTINCT a FROM 
+    COUNT_STAR,             // 2, SELECT COUNT(*) FROM (no GROUP BY)
+    MINMAX_AGGREGATE,       // 3, SELECT MIN(a), MAX(b) FROM (no GROUP BY)
+    SUM,                    // 4, SELECT SUM(a) FROM
+    OTHER                   // Any other query pattern
 };
 
 class AggregationPushdown {
@@ -167,6 +167,8 @@ public:
     unique_ptr<LogicalOperator> PruneAggregation(unique_ptr<LogicalOperator> op, AggOptFunc func);
 
     void UpdateExpressionBindings(Expression* expr);
+
+    void UpdateExpressionBindingsOnce(Expression* expr);
 
     unique_ptr<LogicalOperator> PruneAggregationWithProjectionMap(unique_ptr<LogicalOperator> op);
 

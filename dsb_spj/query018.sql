@@ -25,5 +25,5 @@ WHERE cs_sold_date_sk = d_date_sk
   AND d_year = 2001                                      
   AND c_birth_month = 8                                  
   AND ca_state IN ('CA', 'TX', 'NY')                    
-  AND cs_wholesale_cost BETWEEN 72.5 AND 77.5           
+  AND cs_wholesale_cost BETWEEN 0 AND 77.5           
   AND i_category = 'Electronics'                       

@@ -1,6 +1,8 @@
 SELECT cc_call_center_id AS Call_Center,
        cc_name AS Call_Center_Name,
        cc_manager AS Manager,
+       cd_marital_status,
+       cd_education_status,
        sum(cr_net_loss) AS Returns_Loss
 FROM call_center,
      catalog_returns,

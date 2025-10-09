@@ -13,9 +13,9 @@ WHERE d_date_sk = ss_sold_date_sk
   AND c_current_addr_sk = ca_address_sk
   AND ss_store_sk = s_store_sk
   AND i_category = 'Electronics'                          
-  AND d_year = 2001                                       
+  AND d_year = 2000                                      
   AND d_moy = 8                                          
   AND substring(ca_zip,1,5) <> substring(s_zip,1,5)
   AND ca_state = 'CA'                                    
   AND c_birth_month = 6                                  
-  AND ss_wholesale_cost BETWEEN 50 AND 70              
+  AND ss_wholesale_cost BETWEEN 0 AND 70              

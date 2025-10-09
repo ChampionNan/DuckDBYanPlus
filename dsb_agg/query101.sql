@@ -22,10 +22,8 @@ WHERE ss_ticket_number = sr_ticket_number
   AND i_category IN ('Electronics', 'Sports', 'Books')       
   AND sr_returned_date_sk = d1.d_date_sk
   AND ws_sold_date_sk = d2.d_date_sk
-  AND d2.d_date BETWEEN d1.d_date AND (d1.d_date + interval '90 day')
-  AND ca_state IN ('CA', 'TX', 'NY', 'FL', 'IL')            
+  AND d2.d_date BETWEEN d1.d_date AND (d1.d_date + interval '180 day')
+  AND ca_state NOT IN ('CA')            
   AND d1.d_year = 1999                                       
-  AND hd_income_band_sk BETWEEN 2 AND 17                    
-  AND hd_buy_potential = '1001-5000'                        
-  AND ss_sales_price / ss_list_price BETWEEN 0.50 AND 0.70  
+  AND hd_income_band_sk BETWEEN 2 AND 50                                       
 GROUP BY c_customer_sk, c_first_name, c_last_name

@@ -8,6 +8,8 @@
 #include "duckdb/planner/expression/list.hpp"
 #include "duckdb/planner/operator/list.hpp"
 
+#include "duckdb/optimizer/setting.hpp"
+
 namespace duckdb {
 
 //JoinOrderOptimizer::JoinOrderOptimizer(ClientContext &context) : context(context), query_graph_manager(context) {}
@@ -127,9 +129,9 @@ unique_ptr<LogicalOperator> JoinOrderOptimizer::CallSolveJoinOrderFixed(unique_p
 #endif
 
 	// NOTE: Fallback to DuckDB plan when #tables >= 9
-	if (query_graph_manager.relation_manager.NumRelations() >= 8) {
-		GYO = false;
-	}
+	// if (query_graph_manager.relation_manager.NumRelations() >= 9) {
+	//	GYO = false;
+	// }
 
 	if (!exec_order.empty() || GYO) {
 		// query graph now has filters and relations
@@ -150,12 +152,12 @@ unique_ptr<LogicalOperator> JoinOrderOptimizer::CallSolveJoinOrderFixed(unique_p
 				// now reconstruct a logical plan from the query graph plan
 				query_graph_manager.plans = &plan_enumerator.GetPlans();
 				new_logical_plan = query_graph_manager.Reconstruct(std::move(plan));
-#ifdef DEBUG 
+#ifdef PLAN_DEBUG 
 				std::cout << "GYO join tree found and reconstructed! " << std::endl;
 #endif
 			} catch (...) {
 				// Unable to handle with GYO
-#ifdef DEBUG
+#ifdef PLAN_DEBUG
 				std::cout << "GYO join tree not found! " << std::endl;
 #endif
 				GYO = false;
@@ -164,7 +166,7 @@ unique_ptr<LogicalOperator> JoinOrderOptimizer::CallSolveJoinOrderFixed(unique_p
 	}
 
 	if (!GYO || !new_logical_plan){
-#ifdef DEBUG
+#ifdef PLAN_DEBUG
 		std::cout << "CallSolveJoinOrderFixed Failed and fall back to DuckDB implementation! " << std::endl;
 #endif
 		// Create a completely fresh optimizer with clean state

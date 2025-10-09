@@ -1,4 +1,3 @@
--- 替换所有参数后的查询
 SELECT min(ss_quantity),
        min(ss_ext_sales_price),
        min(ss_ext_wholesale_cost),

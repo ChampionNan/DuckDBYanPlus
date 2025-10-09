@@ -3,8 +3,8 @@ SELECT cd_gender,
        cd_education_status,
        hd_vehicle_count,
        count(*) as cnt
-FROM store_sales,
-     web_sales,
+FROM store_sales ss,
+     web_sales ws,
      date_dim d1,
      date_dim d2,
      customer,
@@ -19,7 +19,7 @@ WHERE ss_item_sk = i_item_sk
   AND ws_item_sk = ss_item_sk
   AND ss_sold_date_sk = d1.d_date_sk
   AND ws_sold_date_sk = d2.d_date_sk
-  AND d2.d_date BETWEEN d1.d_date AND (d1.d_date + interval '30 day')
+  AND d2.d_date BETWEEN d1.d_date AND (d1.d_date + interval '360 day')
   AND ss_customer_sk = c_customer_sk
   AND ws_bill_customer_sk = c_customer_sk
   AND ws_warehouse_sk = inv_warehouse_sk
@@ -34,6 +34,6 @@ WHERE ss_item_sk = i_item_sk
   AND c_current_hdemo_sk = hd_demo_sk
   AND c_current_addr_sk = ca_address_sk
   AND ca_state IN ('CA', 'TX', 'NY', 'FL', 'IL')                        
-  AND d1.d_year = 2001                                                  
-  AND ws_wholesale_cost BETWEEN 55 AND 75                               
+  AND d1.d_year = 2000                                               
+  AND ws_wholesale_cost BETWEEN 0 AND 75                               
 GROUP BY cd_gender, cd_marital_status, cd_education_status, hd_vehicle_count                                                           

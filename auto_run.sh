@@ -29,7 +29,15 @@ declare -A DUCK_MAP=(
   [1]="./duckdb_origin"
   [2]="./duckdb_RPT"
   [3]="./duckdb_YanPlus"
-  # [4]="./duckdb_YanPlus_NoGYO"
+  [4]="./duckdb_YanPlus_GYO"
+  [5]="./duckdb_4"
+  [6]="./duckdb_6"
+  [7]="./duckdb_8"
+  [8]="./duckdb_10"
+  [9]="./duckdb_12"
+  [10]="./duckdb_YanPlus_GYO"
+  [11]="./duckdb_20"
+  [12]="./duckdb_24"
 )
 
 if [[ -z ${DUCK_MAP[$DUCK_NUM]} ]]; then
@@ -79,7 +87,8 @@ do
         for ((current_task=1; current_task<=5; current_task++)); 
         do
             echo "Current Task: ${current_task}"
-            timeout -s SIGKILL 15m ${DUCKDB_BIN} -c ".open ${DATABASE}_db" -c "SET threads TO ${NUM_THREADS};" -c ".timer off" -c ".read ${SUBMIT_QUERY}" -c ".read ${SUBMIT_QUERY}" -c ".timer on" -c ".read ${SUBMIT_QUERY}" 2>&1 | tee -a "${LOG_FILE}" | tail -n 1 | awk '{print $5}' >> "${TIME_FILE}"
+            # timeout -s SIGKILL 20m ${DUCKDB_BIN} -c ".open ${DATABASE}_db" -c "SET threads TO ${NUM_THREADS};" -c ".timer off" -c ".read ${SUBMIT_QUERY}" -c ".read ${SUBMIT_QUERY}" -c ".timer on" -c ".read ${SUBMIT_QUERY}" 2>&1 | tee -a "${LOG_FILE}" | tail -n 1 | awk '{print $5}' >> "${TIME_FILE}"
+            timeout -s SIGKILL 2h ${DUCKDB_BIN} -c ".open ${DATABASE}_db" -c "SET threads TO ${NUM_THREADS};" -c ".timer off" -c ".read ${SUBMIT_QUERY}" -c ".timer on" -c ".read ${SUBMIT_QUERY}" 2>&1 | tee -a "${LOG_FILE}" | tail -n 1 | awk '{print $5}' >> "${TIME_FILE}"
         done
         awk '{s+=$1} END{if(NR) print "AVG", s/NR}' "$TIME_FILE" >> "$TIME_FILE"
         echo "End DuckDB Task..."

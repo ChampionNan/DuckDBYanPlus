@@ -9,7 +9,7 @@ FROM catalog_sales,
      call_center,
      date_dim
 WHERE d_month_seq BETWEEN 1190 AND 1213                 
-  AND cs_ship_date_sk = d_date_s
+  AND cs_ship_date_sk = d_date_sk
   AND cs_warehouse_sk = w_warehouse_sk
   AND cs_ship_mode_sk = sm_ship_mode_sk
   AND cs_call_center_sk = cc_call_center_sk
