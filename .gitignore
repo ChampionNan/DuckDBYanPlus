@@ -365,7 +365,7 @@ tools/pythonpkg/duckdb_build/i
 
 # db store
 *_db*
-*test*
 *.txt
 tpch_100/*
-
+job_agg_*/*
+lsqb_test/*

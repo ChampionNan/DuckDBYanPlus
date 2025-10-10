@@ -3,4 +3,4 @@
 #define YANPLUS
 
 // Used for join order debug
-#define PLAN_DEBUG
+// #define PLAN_DEBUG

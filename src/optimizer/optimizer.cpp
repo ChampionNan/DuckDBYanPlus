@@ -178,6 +178,8 @@ void Optimizer::RunBuiltInOptimizers() {
 		plan = ic_rewriter.Rewrite(std::move(plan));
 	});
 
+    auto start_time = std::chrono::high_resolution_clock::now();
+
 #ifndef YANPLUS
     RunOptimizer(OptimizerType::JOIN_ORDER, [&]() {
 		JoinOrderOptimizer optimizer(context);
@@ -196,6 +198,8 @@ void Optimizer::RunBuiltInOptimizers() {
     plan->Print();
 #endif
     // Step1: do the join ordering
+    auto start_time1 = std::chrono::high_resolution_clock::now();
+
     RunOptimizer(OptimizerType::JOIN_ORDER, [&]() {
 		JoinOrderOptimizer optimizer(context, GYO);
         if (GYO) {
@@ -203,6 +207,8 @@ void Optimizer::RunBuiltInOptimizers() {
             plan = optimizer.CallSolveJoinOrderFixed(std::move(plan), empty_bf_order);
         }
 	});
+
+    auto end_time1 = std::chrono::high_resolution_clock::now();
 
     // Begin: Keep the copy
     auto plan_original = plan->Copy(context);
@@ -215,6 +221,9 @@ void Optimizer::RunBuiltInOptimizers() {
     std::cout << "1. After Join Order" << std::endl;
     plan->Print();
 #endif
+
+    auto start_time2 = std::chrono::high_resolution_clock::now();
+
     // Step2: specific operation for different query types
 	if (query_type == QueryType::SELECT_STAR) {
 		PredicateTransferOptimizer PT(context);
@@ -316,10 +325,18 @@ void Optimizer::RunBuiltInOptimizers() {
         plan_original->children[0] = std::move(plan);
         plan = std::move(plan_original);
     }
+    auto end_time2 = std::chrono::high_resolution_clock::now();
+
 #endif // YANPLUS
+
+#ifdef PLAN_DEBUG
     std::cout << "5. After whole Agg-Pushdown Plan " << std::endl;
 	plan->Print();
     PrintOperatorBindings(plan.get());
+#endif
+
+    auto end_time = std::chrono::high_resolution_clock::now();
+
 	// rewrites UNNESTs in DelimJoins by moving them to the projection
 	RunOptimizer(OptimizerType::UNNEST_REWRITER, [&]() {
 		UnnestRewriter unnest_rewriter;
@@ -413,12 +430,22 @@ void Optimizer::RunBuiltInOptimizers() {
 		JoinFilterPushdownOptimizer join_filter_pushdown(*this);
 		join_filter_pushdown.VisitOperator(*plan);
 	});
+    
 	std::cout << "6. After All Optimizations Plan " << std::endl;
 	plan->Print();
     // PrintOperatorBindings(plan.get());
+
+    auto duration_all = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    auto duration1 = std::chrono::duration_cast<std::chrono::microseconds>(end_time1 - start_time1);
+    auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(end_time2 - start_time2);
+    std::cout << "Join order time: " << duration1.count() << " microseconds" << std::endl;
+    std::cout << "Agg pushdown & Optimization time: " << duration2.count() << " microseconds" << std::endl;
+    std::cout << "All Yan+ optimization time: " << duration_all.count() << " microseconds" << std::endl;
 }
 
 unique_ptr<LogicalOperator> Optimizer::Optimize(unique_ptr<LogicalOperator> plan_p) {
+    auto start_time = std::chrono::high_resolution_clock::now();
+
 	Verify(*plan_p);
 
 	this->plan = std::move(plan_p);
@@ -444,6 +471,10 @@ unique_ptr<LogicalOperator> Optimizer::Optimize(unique_ptr<LogicalOperator> plan
 	}
 
 	Planner::VerifyPlan(context, plan);
+
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    std::cout << "All optimization time: " << duration.count() << " microseconds" << std::endl;
 
 	return std::move(plan);
 }

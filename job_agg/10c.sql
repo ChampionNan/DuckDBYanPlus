@@ -17,4 +17,5 @@ WHERE ci.note LIKE '%(producer)%'
   AND chn.id = ci.person_role_id
   AND rt.id = ci.role_id
   AND cn.id = mc.company_id
+  AND ct.id = mc.company_type_id
 GROUP BY chn.name, t.title

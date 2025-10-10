@@ -1956,19 +1956,19 @@ unique_ptr<LogicalOperator> AggregationPushdown::PruneAggregationWithProjectionM
         }
         for (idx_t i = 0; i < agg.expressions.size(); i++) {
             auto &agg_expr = agg.expressions[i];
-                // Handle the SUM function specifically - this is more reliable than general binding updates
-                if (agg_expr->type == ExpressionType::BOUND_AGGREGATE) {
-                    auto &bound_agg = agg_expr->Cast<BoundAggregateExpression>();
-                    for (auto &child : bound_agg.children) {
-                        if (child->type == ExpressionType::BOUND_COLUMN_REF) {
-                            auto &col_ref = child->Cast<BoundColumnRefExpression>();
-                            // If this binding refers to a column in the bottom projection
-                            if (col_ref.binding.table_index == bottom_proj->table_index) {
-                                needed_bottom_columns.insert(col_ref.binding.column_index);
-                            }
+            // Handle the SUM function specifically - this is more reliable than general binding updates
+            if (agg_expr->type == ExpressionType::BOUND_AGGREGATE) {
+                auto &bound_agg = agg_expr->Cast<BoundAggregateExpression>();
+                for (auto &child : bound_agg.children) {
+                    if (child->type == ExpressionType::BOUND_COLUMN_REF) {
+                        auto &col_ref = child->Cast<BoundColumnRefExpression>();
+                        // If this binding refers to a column in the bottom projection
+                        if (col_ref.binding.table_index == bottom_proj->table_index) {
+                            needed_bottom_columns.insert(col_ref.binding.column_index);
                         }
                     }
                 }
+            }
         }
         // Step 3: Prune bottom projection if needed
         if (needed_bottom_columns.size() < bottom_proj->expressions.size()) {

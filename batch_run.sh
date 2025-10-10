@@ -83,14 +83,14 @@ trap 'echo "Interrupted"; kill 0; exit 130' INT
 # ./auto_run.sh graph bf 12
 
 # parallel
-echo "Starting graph origin parallel"
-./auto_run.sh graph parallel_graph 1 2
-echo "Starting graph RPT"
-./auto_run.sh graph parallel_graph 2 2
-echo "Starting graph YanPlus"
-./auto_run.sh graph parallel_graph 3 2
-echo "Starting graph YanPlus_GYO"
-./auto_run.sh graph parallel_graph 4 2
+# echo "Starting graph origin parallel"
+# ./auto_run.sh graph parallel_graph 1 2
+# echo "Starting graph RPT"
+# ./auto_run.sh graph parallel_graph 2 2
+# echo "Starting graph YanPlus"
+# ./auto_run.sh graph parallel_graph 3 2
+# echo "Starting graph YanPlus_GYO"
+# ./auto_run.sh graph parallel_graph 4 2
 
 # echo "Starting job origin parallel"
 # ./auto_run.sh job parallel_job 1 72
