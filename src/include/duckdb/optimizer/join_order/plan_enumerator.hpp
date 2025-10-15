@@ -125,6 +125,7 @@ private:
     vector<GYOReductionStep> gyo_reduction_sequence;
 	column_binding_set_t output_variables;// All output variables
 	column_binding_set_t marker_bindings; // output variables not in join condition
+	idx_t group_by_num_count;
 };
 
 } // namespace duckdb

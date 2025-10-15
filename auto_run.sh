@@ -30,14 +30,7 @@ declare -A DUCK_MAP=(
   [2]="./duckdb_RPT"
   [3]="./duckdb_YanPlus"
   [4]="./duckdb_YanPlus_GYO"
-  [5]="./duckdb_4"
-  [6]="./duckdb_6"
-  [7]="./duckdb_8"
-  [8]="./duckdb_10"
-  [9]="./duckdb_12"
-  [10]="./duckdb_YanPlus_GYO"
-  [11]="./duckdb_20"
-  [12]="./duckdb_24"
+  [5]="./duckdb_YanPlus_NoGYO"
 )
 
 if [[ -z ${DUCK_MAP[$DUCK_NUM]} ]]; then

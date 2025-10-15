@@ -53,14 +53,16 @@ trap 'echo "Interrupted"; kill 0; exit 130' INT
 # ./auto_run.sh dsb dsb_spj 4
 
 # Other
-# echo "Starting graph origin"
-# ./auto_run.sh graph job_temp 1
-# echo "Starting graph RPT"
-# ./auto_run.sh graph job_temp 2
-# echo "Starting graph YanPlus"
-# ./auto_run.sh graph job_temp 3
-# echo "Starting graph YanPlus_GYO"
-# ./auto_run.sh graph job_temp 4
+echo "Starting job origin"
+./auto_run.sh job job_agg_test2 1
+echo "Starting graph RPT"
+./auto_run.sh job job_agg_test2 2
+echo "Starting graph YanPlus"
+./auto_run.sh job job_agg_test2 3
+echo "Starting graph YanPlus_GYO"
+./auto_run.sh job job_agg_test2 4
+echo "Starting graph YanPlus_NoGYO"
+./auto_run.sh job job_agg_test2 5
 
 # bloom_filter test
 # echo "Starting BF RPT"

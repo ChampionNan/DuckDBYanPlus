@@ -67,7 +67,6 @@ void RemoveUnusedColumns::VisitOperator(LogicalOperator &op) {
 		// This causes the duplicate eliminator to ignore functionality provided by grouping sets
 		bool new_root = false;
 		if (aggr.grouping_sets.size() > 1) {
-			;
 			new_root = true;
 		}
 		if (!everything_referenced && !new_root) {

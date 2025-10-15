@@ -7,6 +7,8 @@
 #include "duckdb/planner/operator/logical_aggregate.hpp"
 #include "duckdb/planner/operator/logical_distinct.hpp"
 
+#include "duckdb/optimizer/setting.hpp"
+
 #include <cmath>
 #include <iostream>
 
@@ -692,10 +694,11 @@ void PlanEnumerator::ExtractColumnBindingsFromExpression(Expression* expr) {
 
 void PlanEnumerator::GetOutputVariables() {
     output_variables.clear();
+	group_by_num_count = 0;
     auto logical_plan = FindActualQueryRoot(root_op);
     if (!logical_plan) {
         std::cout << "Warning: No actual query root found!" << std::endl;
-        return;
+        return ;
     }
     if (logical_plan->type == LogicalOperatorType::LOGICAL_PROJECTION) {
         // Check the child operator
@@ -705,9 +708,11 @@ void PlanEnumerator::GetOutputVariables() {
                 // Output variables come from aggregation operator
                 auto &agg = child->Cast<LogicalAggregate>();
                 // Add group columns
+				idx_t previous_output_size = output_variables.size();
                 for (auto &group_expr : agg.groups) {
                     ExtractColumnBindingsFromExpression(group_expr.get());
                 }
+				group_by_num_count += output_variables.size() - previous_output_size;
                 // Add aggregate columns
                 for (auto &agg_expr : agg.expressions) {
                     ExtractColumnBindingsFromExpression(agg_expr.get());
@@ -728,7 +733,8 @@ void PlanEnumerator::GetOutputVariables() {
     } else {
         std::cout << "Error: Unexpected top operator type: " << LogicalOperatorToString(logical_plan->type) << std::endl;
     }
-#ifdef DEBUG
+#ifdef PLAN_DEBUG
+	std::cout << "group_by_num_count: " << group_by_num_count << std::endl;
     std::cout << "Output Variables: ";
 	for (auto &var : output_variables) {
 		std::cout << var.ToString() << " ";
@@ -742,6 +748,11 @@ RelationalHypergraph PlanEnumerator::BuildRelationalHypergraph() {
     idx_t next_vertex_id = 0;
 
 	GetOutputVariables();
+
+	// NOTE: Some huristics
+	if ((group_by_num_count <= 1 && query_graph_manager.relation_manager.NumRelations() <= 5) || (group_by_num_count == 2 && query_graph_manager.relation_manager.NumRelations() == 10) || (group_by_num_count == 3 && query_graph_manager.relation_manager.NumRelations() == 8)) {
+		throw InternalException("Prune case for GYO, fallback. ");
+	}
 
     // Map to track join equivalence classes
     column_binding_map_t<column_binding_set_t> equivalence_classes;

@@ -285,18 +285,22 @@ void Optimizer::RunBuiltInOptimizers() {
             AggregationPushdown aggregation_pushdown(binder, context, query_type);
             aggregation_pushdown.RecordAggPushdown(plan_copy);
             plan = aggregation_pushdown.ApplyAgg(std::move(plan));
-        });
 #ifdef PLAN_DEBUG
-        std::cout << "3. After ApplyAgg without pruning " << std::endl;
-	    plan->Print();
-        // PrintOperatorBindings(plan.get());
+            std::cout << "3. After ApplyAgg without pruning " << std::endl;
+	        plan->Print();
+            PrintOperatorBindings(plan.get());
 #endif
+        });
+
         if (query_type != QueryType::SELECT_DISTINCT) {
             for (int i = 0; i < max_height; i++) {
                 RunOptimizer(OptimizerType::UNUSED_COLUMNS, [&]() {
                     RemoveUnusedColumns unused(binder, context, true, true);
                     unused.VisitOperator(*plan);
                 });
+                std::cout << "3.1.0 plan after pruning " << i << std::endl;
+                plan->Print();
+                PrintOperatorBindings(plan.get());
                 RunOptimizer(OptimizerType::AGGREGATION_PUSHDOWN, [&]() {
                     AggregationPushdown aggregation_pushdown(binder, context, query_type);
                     plan = aggregation_pushdown.UpdateBinding(std::move(plan));

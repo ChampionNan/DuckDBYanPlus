@@ -303,7 +303,7 @@ unique_ptr<LogicalOperator> AggregationPushdown::ReplaceRootCountWithSum(unique_
         LogicalType annot_type; // Default, adjust if needed
         if (agg.children.size() > 0 && 
             FindAnnotAttribute(agg.children[0].get(), annot_binding, annot_type)) {
-                
+            
             // Found annot - replace COUNT(*) with SUM(annot)
             vector<unique_ptr<Expression>> sum_args;
                 
@@ -470,27 +470,53 @@ unique_ptr<LogicalOperator> AggregationPushdown::ReplaceRootCountWithSum(unique_
                 if (has_annot) {
                     auto annot_col_ref = make_uniq<BoundColumnRefExpression>(annot_type, annot_binding);
                     auto original_expr = sum_info.expression_tree->Copy();
-                    vector<unique_ptr<Expression>> mult_children;
-                    mult_children.push_back(std::move(original_expr));
-                    mult_children.push_back(std::move(annot_col_ref));
-                    FunctionBinder function_binder(context);
-                    string error_msg;
-    
-                    // Let DuckDB automatically select the right function and return type
-                    ErrorData error;
-                    auto mul_expr = function_binder.BindScalarFunction(
-                        DEFAULT_SCHEMA,                // schema name
-                        "*",                          // function name
-                        std::move(mult_children),     // children expressions
-                        error,                        // ErrorData reference
-                        true,                         // is_operator
-                        nullptr                       // optional binder
-                    );
-                    if (!mul_expr) {
-                        throw Exception(ExceptionType::BINDER, "Failed to bind multiplication function: " + error.Message());
+
+                    UpdateExpressionBindings(original_expr.get());
+
+                    if (original_expr->GetExpressionClass() == ExpressionClass::BOUND_AGGREGATE) {
+                        auto& bound_agg = original_expr->Cast<BoundAggregateExpression>();
+                        if (!bound_agg.children.empty()) {
+                            if (bound_agg.function.name == "count_star") {
+                                bound_agg.children.clear();
+                                bound_agg.children.push_back(std::move(annot_col_ref));
+                    
+                                // Update function to SUM
+                                AggregateFunction sum_function = GetSumAggregate(annot_type.InternalType());
+                                if (sum_function.name.empty()) {
+                                    sum_function.name = "sum";
+                                }
+                                bound_agg.function = sum_function;
+                                bound_agg.return_type = sum_function.return_type;
+                            } else {
+                                auto inner_expr = bound_agg.children[0]->Copy();
+                                vector<unique_ptr<Expression>> mult_children;
+                                mult_children.push_back(std::move(inner_expr));
+                                mult_children.push_back(std::move(annot_col_ref));
+                    
+                                FunctionBinder function_binder(context);
+                                ErrorData error;
+                                auto mul_expr = function_binder.BindScalarFunction(
+                                    DEFAULT_SCHEMA,
+                                    "*",
+                                    std::move(mult_children),
+                                    error,
+                                    true,
+                                    nullptr
+                                );
+                                if (!mul_expr) {
+                                    throw Exception(ExceptionType::BINDER, "Failed to bind multiplication function: " + error.Message());
+                                }
+                                bound_agg.children.clear();
+                                bound_agg.children.push_back(std::move(mul_expr));
+                            }
+                            bound_agg.alias = sum_info.alias;
+                            agg_expressions.push_back(std::move(original_expr));
+                        } else {
+                            throw Exception(ExceptionType::BINDER, "bound agg child empty");
+                        }
+                    } else {
+                        throw Exception(ExceptionType::BINDER, "Not bound agg type. ");
                     }
-                    mul_expr->alias = sum_info.alias; // Set the alias from the SumAggInfo
-                    agg_expressions.push_back(std::move(mul_expr));
                 }
             }
         }
@@ -1583,6 +1609,13 @@ void AggregationPushdown::UpdateSum() {
             // std::cout << "Updated sum binding: " << sum_info.result_binding.ToString() << " → " << new_binding.ToString() << std::endl;
             sum_info.result_binding = new_binding;
         }
+        for (auto& col_info : sum_info.involved_columns) {
+            ColumnBinding new_col_binding = GetUpdatedBinding(col_info.binding);
+            if (col_info.binding != new_col_binding) {
+                // std::cout << "Updated sum involved binding: " << col_info.binding.ToString() << " → " << new_col_binding.ToString() << std::endl;
+                col_info.binding = new_col_binding;
+            }
+        }
     }
 }
 
@@ -1711,9 +1744,6 @@ unique_ptr<LogicalOperator> AggregationPushdown::PruneAggregation(unique_ptr<Log
     if (op->type == LogicalOperatorType::LOGICAL_COMPARISON_JOIN ||
         op->type == LogicalOperatorType::LOGICAL_ASOF_JOIN ||
         op->type == LogicalOperatorType::LOGICAL_DELIM_JOIN) {
-
-        // std::cout << "PruneAggregation" << std::endl;
-        // op->Print();
         
         auto &join = op->Cast<LogicalComparisonJoin>();
     
@@ -1839,6 +1869,14 @@ void AggregationPushdown::UpdateExpressionBindings(Expression* expr) {
             auto& op_expr = expr->Cast<BoundOperatorExpression>();
             // Update all children in operator expressions
             for (auto& child : op_expr.children) {
+                UpdateExpressionBindings(child.get());
+            }
+            break;
+        }
+        case ExpressionClass::BOUND_AGGREGATE: {
+            auto& agg_expr = expr->Cast<BoundAggregateExpression>();
+            // Update all children expressions in the aggregate function
+            for (auto& child : agg_expr.children) {
                 UpdateExpressionBindings(child.get());
             }
             break;
