@@ -291,16 +291,14 @@ void Optimizer::RunBuiltInOptimizers() {
             PrintOperatorBindings(plan.get());
 #endif
         });
-
+        // NOTE: Used for opt-Column Prune
+///*
         if (query_type != QueryType::SELECT_DISTINCT) {
             for (int i = 0; i < max_height; i++) {
                 RunOptimizer(OptimizerType::UNUSED_COLUMNS, [&]() {
                     RemoveUnusedColumns unused(binder, context, true, true);
                     unused.VisitOperator(*plan);
                 });
-                std::cout << "3.1.0 plan after pruning " << i << std::endl;
-                plan->Print();
-                PrintOperatorBindings(plan.get());
                 RunOptimizer(OptimizerType::AGGREGATION_PUSHDOWN, [&]() {
                     AggregationPushdown aggregation_pushdown(binder, context, query_type);
                     plan = aggregation_pushdown.UpdateBinding(std::move(plan));
@@ -317,6 +315,7 @@ void Optimizer::RunBuiltInOptimizers() {
             RemoveUnusedColumns unused(binder, context, true);
             unused.VisitOperatorBottomUp(*plan);
         });
+//*/
 #ifdef PLAN_DEBUG
         std::cout << "4. After duplicate fix" << std::endl;
 	    plan->Print();
@@ -440,10 +439,10 @@ void Optimizer::RunBuiltInOptimizers() {
     // PrintOperatorBindings(plan.get());
 
     auto duration_all = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
-    auto duration1 = std::chrono::duration_cast<std::chrono::microseconds>(end_time1 - start_time1);
-    auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(end_time2 - start_time2);
-    std::cout << "Join order time: " << duration1.count() << " microseconds" << std::endl;
-    std::cout << "Agg pushdown & Optimization time: " << duration2.count() << " microseconds" << std::endl;
+    // auto duration1 = std::chrono::duration_cast<std::chrono::microseconds>(end_time1 - start_time1);
+    // auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(end_time2 - start_time2);
+    // std::cout << "Join order time: " << duration1.count() << " microseconds" << std::endl;
+    // std::cout << "Agg pushdown & Optimization time: " << duration2.count() << " microseconds" << std::endl;
     std::cout << "All Yan+ optimization time: " << duration_all.count() << " microseconds" << std::endl;
 }
 

@@ -1,0 +1,44 @@
+========================================
+MASTER SUMMARY LOG
+========================================
+Test session started at: Thu Oct 16 12:22:14 UTC 2025
+Number of queries: 8
+Number of DuckDB executables: 3
+Current working directory: /dynamic-predicate-transfer
+Log directory: /dynamic-predicate-transfer/log
+Timeout: DISABLED (runs until completion)
+========================================
+
+🚀 Testing query: tpch/10.sql
+🚀 Testing query: job_agg/22c.sql
+🚀 Testing query: job_agg/3a.sql
+🚀 Testing query: graph/q1.sql
+🚀 Testing query: graph/q6.sql
+🚀 Testing query: lsqb/q1.sql
+🚀 Testing query: dsb_agg/query100.sql
+🚀 Testing query: lsqb/q6.sql
+======================================== 
+FINAL SUMMARY - ALL QUERIES
+========================================
+Total configured queries: 8
+Total DuckDB executables: 3
+Master summary saved to: log/master_summary_20251016_122214.csv
+Master log saved to: log/master_summary_20251016_122214.log
+
+Generated files in log/ directory:
+log/summary_dsb_agg_query100_20251016_124438.csv
+log/summary_graph_q1_20251016_123423.csv
+log/summary_graph_q6_20251016_124213.csv
+log/summary_job_agg_22c_20251016_122233.csv
+log/summary_job_agg_3a_20251016_122836.csv
+log/summary_lsqb_q1_20251016_124418.csv
+log/summary_lsqb_q6_20251016_124533.csv
+log/summary_tpch_10_20251016_122214.csv
+
+Generated 24 individual log files
+Generated 24 memory CSV files
+Generated 8 summary log files
+
+Total files in log directory: 66
+Log directory size: 436K
+Test session completed at: Thu Oct 16 12:46:37 UTC 2025

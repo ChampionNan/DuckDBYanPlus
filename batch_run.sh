@@ -11,12 +11,16 @@ trap 'echo "Interrupted"; kill 0; exit 130' INT
 # ./auto_run.sh graph graph 4
 
 # LSQB test
-# echo "Starting LSQB original"
-# ./auto_run.sh lsqb lsqb_test 1
-# echo "Starting LSQB RPT"
-# ./auto_run.sh lsqb lsqb_test 2
-# echo "Starting LSQB Yan+"
-# ./auto_run.sh lsqb lsqb_test 3
+echo "Starting LSQB original"
+./auto_run.sh lsqb lsqb_test 1
+echo "Starting LSQB RPT"
+./auto_run.sh lsqb lsqb_test 2
+echo "Starting LSQB Yan+"
+./auto_run.sh lsqb lsqb_test 3
+echo "Starting LSQB GYO"
+./auto_run.sh lsqb lsqb_test 4
+echo "Starting LSQB NoGYO"
+./auto_run.sh lsqb lsqb_test 5
 
 # JOB test
 # echo "Starting JOB agg Part1 original"
@@ -34,35 +38,52 @@ trap 'echo "Interrupted"; kill 0; exit 130' INT
 # ./auto_run.sh job job_agg_part2 3
 
 # DSB test
-# echo "Starting DSB_AGG original"
-# ./auto_run.sh dsb dsb_agg 1
-# echo "Starting DSB RPT"
-# ./auto_run.sh dsb dsb_agg 2
-# echo "Starting DSB Yan+"
-# ./auto_run.sh dsb dsb_agg 3
-# echo "Starting DSB GYO"
-# ./auto_run.sh dsb dsb_agg 4
+echo "Starting DSB_AGG original"
+./auto_run.sh dsb dsb_agg 1
+echo "Starting DSB RPT"
+./auto_run.sh dsb dsb_agg 2
+echo "Starting DSB Yan+"
+./auto_run.sh dsb dsb_agg 3
+echo "Starting DSB GYO"
+./auto_run.sh dsb dsb_agg 4
+echo "Starting DSB YanPlus_NoGYO"
+./auto_run.sh dsb dsb_agg 5
 
-# echo "Starting DSB_SPJ original"
-# ./auto_run.sh dsb dsb_spj 1
-# echo "Starting DSB RPT"
-# ./auto_run.sh dsb dsb_spj 2
-# echo "Starting DSB Yan+"
-# ./auto_run.sh dsb dsb_spj 3
-# echo "Starting DSB GYO"
-# ./auto_run.sh dsb dsb_spj 4
+echo "Starting DSB_SPJ original"
+./auto_run.sh dsb dsb_spj 1
+echo "Starting DSB RPT"
+./auto_run.sh dsb dsb_spj 2
+echo "Starting DSB Yan+"
+./auto_run.sh dsb dsb_spj 3
+echo "Starting DSB GYO"
+./auto_run.sh dsb dsb_spj 4
+echo "Starting DSB YanPlus_NoGYO"
+./auto_run.sh dsb dsb_spj 5
+
+# TPC-H test
+
+echo "Starting TPC-H original"
+./auto_run.sh tpch tpch 1
+echo "Starting TPC-H RPT"
+./auto_run.sh tpch tpch 2
+echo "Starting TPC-H Yan+"
+./auto_run.sh tpch tpch 3
+echo "Starting TPC-H GYO"
+./auto_run.sh tpch tpch 4
+echo "Starting TPC-H YanPlus_NoGYO"
+./auto_run.sh tpch tpch 5
 
 # Other
 echo "Starting job origin"
-./auto_run.sh job job_agg_test2 1
+./auto_run.sh job job_agg_test 1
 echo "Starting graph RPT"
-./auto_run.sh job job_agg_test2 2
+./auto_run.sh job job_agg_test 2
 echo "Starting graph YanPlus"
-./auto_run.sh job job_agg_test2 3
+./auto_run.sh job job_agg_test 3
 echo "Starting graph YanPlus_GYO"
-./auto_run.sh job job_agg_test2 4
+./auto_run.sh job job_agg_test 4
 echo "Starting graph YanPlus_NoGYO"
-./auto_run.sh job job_agg_test2 5
+./auto_run.sh job job_agg_test 5
 
 # bloom_filter test
 # echo "Starting BF RPT"

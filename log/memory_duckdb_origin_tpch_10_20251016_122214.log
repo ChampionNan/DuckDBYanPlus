@@ -1,0 +1,51 @@
+========================================
+MEMORY MONITORING LOG
+========================================
+DuckDB Path: ./duckdb_origin
+Query File: tpch/10.sql
+Database File: tpch_db
+Start Time: Thu Oct 16 12:22:14 UTC 2025
+========================================
+
+Starting DuckDB process...
+DuckDB PID: 730494
+Memory monitoring started at: Thu Oct 16 12:22:14 UTC 2025
+Memory CSV file: log/memory_duckdb_origin_tpch_10_20251016_122214_memory.csv
+No timeout - will run until completion
+----------------------------------------
+New Peak RSS: 23896 KB at 0s
+New Peak VSZ: 647916 KB at 0s
+New Peak RSS: 1337412 KB at 1s
+New Peak VSZ: 7184964 KB at 1s
+New Peak RSS: 2392416 KB at 1s
+New Peak VSZ: 8432892 KB at 1s
+New Peak CPU: 2626% at 1s
+New Peak RSS: 4279948 KB at 2s
+New Peak VSZ: 11210912 KB at 2s
+New Peak RSS: 7271812 KB at 3s
+New Peak VSZ: 14123168 KB at 3s
+New Peak CPU: 3514% at 3s
+New Peak RSS: 9617016 KB at 3s
+New Peak VSZ: 16349344 KB at 3s
+New Peak RSS: 10976984 KB at 4s
+New Peak VSZ: 18299448 KB at 4s
+New Peak CPU: 3709% at 4s
+New Peak VSZ: 18299548 KB at 4s
+
+========================================
+FINAL RESULTS
+========================================
+DuckDB: duckdb_origin
+Query: tpch/10.sql
+Database: tpch_db
+End Time: Thu Oct 16 12:22:20 UTC 2025
+Execution time: 6s
+Exit code: 0
+Peak RSS (Physical Memory): 10719.71 MB
+Peak VSZ (Virtual Memory): 17870.65 MB
+Peak CPU Usage: 3709%
+Average RSS: 4946.49 MB
+Average VSZ: 12699.94 MB
+Total samples collected: 10
+Memory CSV file: log/memory_duckdb_origin_tpch_10_20251016_122214_memory.csv
+========================================

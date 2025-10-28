@@ -1,0 +1,55 @@
+========================================
+QUERY SUMMARY LOG
+========================================
+Query File: job_agg/22c.sql
+Database File: job_db
+Summary started at: Thu Oct 16 12:22:33 UTC 2025
+========================================
+
+Testing with DuckDB: ./duckdb_origin
+Results for ./duckdb_origin:
+  Execution time: 119s
+  Exit code: 0
+  Peak RSS: 54147.43 MB
+  Peak VSZ: 71611.76 MB
+  Peak CPU: 5017%
+  Average RSS: 34966.34 MB
+  Log file: log/memory_duckdb_origin_job_agg_22c_20251016_122233.log
+  Memory CSV: log/memory_duckdb_origin_job_agg_22c_20251016_122233_memory.csv
+
+✅ Success
+
+Testing with DuckDB: ./duckdb_RPT
+Results for ./duckdb_RPT:
+  Execution time: 118s
+  Exit code: 0
+  Peak RSS: 54000.17 MB
+  Peak VSZ: 65454.82 MB
+  Peak CPU: 3914%
+  Average RSS: 36826.17 MB
+  Log file: log/memory_duckdb_RPT_job_agg_22c_20251016_122432.log
+  Memory CSV: log/memory_duckdb_RPT_job_agg_22c_20251016_122432_memory.csv
+
+✅ Success
+
+Testing with DuckDB: ./duckdb_YanPlus
+Results for ./duckdb_YanPlus:
+  Execution time: 125s
+  Exit code: 0
+  Peak RSS: 54092.13 MB
+  Peak VSZ: 67921.23 MB
+  Peak CPU: 263%
+  Average RSS: 31137.50 MB
+  Log file: log/memory_duckdb_YanPlus_job_agg_22c_20251016_122631.log
+  Memory CSV: log/memory_duckdb_YanPlus_job_agg_22c_20251016_122631_memory.csv
+
+✅ Success
+
+Query Summary for job_agg/22c.sql:
+  Successful tests: 3
+  Failed/Skipped tests: 0
+  Summary CSV saved to: log/summary_job_agg_22c_20251016_122233.csv
+  Summary log saved to: log/summary_job_agg_22c_20251016_122233.log
+
+Summary completed at: Thu Oct 16 12:28:36 UTC 2025
+=======================================

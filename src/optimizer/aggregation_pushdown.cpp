@@ -678,6 +678,10 @@ unique_ptr<LogicalOperator> AggregationPushdown::AddAnnotAttributeDFS(unique_ptr
             }
         }
 
+        // NOTE: Flag for Opt-PK-FK & Annot
+        // addLeft = true;
+        // addRight = true;
+
         if (addLeft) {
             join.children[0] = CreateDynamicAggregate(std::move(join.children[0]));
         }

@@ -750,7 +750,7 @@ RelationalHypergraph PlanEnumerator::BuildRelationalHypergraph() {
 	GetOutputVariables();
 
 	// NOTE: Some huristics
-	if ((group_by_num_count <= 1 && query_graph_manager.relation_manager.NumRelations() <= 5) || (group_by_num_count == 2 && query_graph_manager.relation_manager.NumRelations() == 10) || (group_by_num_count == 3 && query_graph_manager.relation_manager.NumRelations() == 8)) {
+	if ((group_by_num_count <= 1 && query_graph_manager.relation_manager.NumRelations() <= 5) || (group_by_num_count == 2 && query_graph_manager.relation_manager.NumRelations() == 10) || ((group_by_num_count == 3 || group_by_num_count == 2) && query_graph_manager.relation_manager.NumRelations() == 8)) {
 		throw InternalException("Prune case for GYO, fallback. ");
 	}
 

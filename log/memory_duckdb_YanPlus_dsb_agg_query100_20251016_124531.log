@@ -1,0 +1,43 @@
+========================================
+MEMORY MONITORING LOG
+========================================
+DuckDB Path: ./duckdb_YanPlus
+Query File: dsb_agg/query100.sql
+Database File: dsb_db
+Start Time: Thu Oct 16 12:45:31 UTC 2025
+========================================
+
+Starting DuckDB process...
+DuckDB PID: 786488
+Memory monitoring started at: Thu Oct 16 12:45:31 UTC 2025
+Memory CSV file: log/memory_duckdb_YanPlus_dsb_agg_query100_20251016_124531_memory.csv
+No timeout - will run until completion
+----------------------------------------
+New Peak RSS: 24400 KB at 0s
+New Peak VSZ: 59824 KB at 0s
+New Peak RSS: 903564 KB at 0s
+New Peak VSZ: 6530180 KB at 0s
+New Peak CPU: 541% at 0s
+New Peak RSS: 2870088 KB at 1s
+New Peak VSZ: 8676484 KB at 1s
+New Peak CPU: 2081% at 1s
+New Peak RSS: 4099260 KB at 1s
+New Peak VSZ: 10455508 KB at 1s
+
+========================================
+FINAL RESULTS
+========================================
+DuckDB: duckdb_YanPlus
+Query: dsb_agg/query100.sql
+Database: dsb_db
+End Time: Thu Oct 16 12:45:33 UTC 2025
+Execution time: 2s
+Exit code: 0
+Peak RSS (Physical Memory): 4003.18 MB
+Peak VSZ (Virtual Memory): 10210.46 MB
+Peak CPU Usage: 2081%
+Average RSS: 1703.13 MB
+Average VSZ: 6957.99 MB
+Total samples collected: 5
+Memory CSV file: log/memory_duckdb_YanPlus_dsb_agg_query100_20251016_124531_memory.csv
+========================================

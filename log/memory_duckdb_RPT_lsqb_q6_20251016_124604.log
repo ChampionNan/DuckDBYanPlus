@@ -1,0 +1,47 @@
+========================================
+MEMORY MONITORING LOG
+========================================
+DuckDB Path: ./duckdb_RPT
+Query File: lsqb/q6.sql
+Database File: lsqb_db
+Start Time: Thu Oct 16 12:46:04 UTC 2025
+========================================
+
+Starting DuckDB process...
+DuckDB PID: 787990
+Memory monitoring started at: Thu Oct 16 12:46:04 UTC 2025
+Memory CSV file: log/memory_duckdb_RPT_lsqb_q6_20251016_124604_memory.csv
+No timeout - will run until completion
+----------------------------------------
+New Peak RSS: 29184 KB at 0s
+New Peak VSZ: 64972 KB at 0s
+New Peak RSS: 1050332 KB at 1s
+New Peak VSZ: 6870940 KB at 1s
+New Peak CPU: 3226% at 1s
+New Peak RSS: 1063284 KB at 2s
+New Peak CPU: 9319% at 2s
+New Peak RSS: 1065120 KB at 3s
+New Peak RSS: 1065800 KB at 4s
+New Peak RSS: 1065868 KB at 11s
+New Peak RSS: 1066084 KB at 13s
+New Peak RSS: 1066860 KB at 15s
+Sample 20: RSS=1040.82MB, VSZ=6709.90MB, CPU=7187%, Elapsed=16s
+Sample 40: RSS=1020.31MB, VSZ=6709.90MB, CPU=6221%, Elapsed=27s
+
+========================================
+FINAL RESULTS
+========================================
+DuckDB: duckdb_RPT
+Query: lsqb/q6.sql
+Database: lsqb_db
+End Time: Thu Oct 16 12:46:34 UTC 2025
+Execution time: 30s
+Exit code: 0
+Peak RSS (Physical Memory): 1041.86 MB
+Peak VSZ (Virtual Memory): 6709.90 MB
+Peak CPU Usage: 9319%
+Average RSS: 990.77 MB
+Average VSZ: 6550.30 MB
+Total samples collected: 45
+Memory CSV file: log/memory_duckdb_RPT_lsqb_q6_20251016_124604_memory.csv
+========================================

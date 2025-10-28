@@ -1,0 +1,4 @@
+DuckDB_Path,Query_File,Database_File,Execution_Time_s,Exit_Code,Peak_RSS_MB,Peak_VSZ_MB,Peak_CPU%,Avg_RSS_MB,Log_File,Memory_CSV
+./duckdb_origin,job_agg/22c.sql,job_db,119,0,54147.43,71611.76,5017,34966.34,log/memory_duckdb_origin_job_agg_22c_20251016_122233.log,log/memory_duckdb_origin_job_agg_22c_20251016_122233_memory.csv
+./duckdb_RPT,job_agg/22c.sql,job_db,118,0,54000.17,65454.82,3914,36826.17,log/memory_duckdb_RPT_job_agg_22c_20251016_122432.log,log/memory_duckdb_RPT_job_agg_22c_20251016_122432_memory.csv
+./duckdb_YanPlus,job_agg/22c.sql,job_db,125,0,54092.13,67921.23,263,31137.50,log/memory_duckdb_YanPlus_job_agg_22c_20251016_122631.log,log/memory_duckdb_YanPlus_job_agg_22c_20251016_122631_memory.csv

@@ -1,0 +1,40 @@
+========================================
+MEMORY MONITORING LOG
+========================================
+DuckDB Path: ./duckdb_RPT
+Query File: dsb_agg/query100.sql
+Database File: dsb_db
+Start Time: Thu Oct 16 12:45:29 UTC 2025
+========================================
+
+Starting DuckDB process...
+DuckDB PID: 786268
+Memory monitoring started at: Thu Oct 16 12:45:29 UTC 2025
+Memory CSV file: log/memory_duckdb_RPT_dsb_agg_query100_20251016_124529_memory.csv
+No timeout - will run until completion
+----------------------------------------
+New Peak RSS: 22200 KB at 0s
+New Peak VSZ: 58068 KB at 0s
+New Peak RSS: 3019996 KB at 0s
+New Peak VSZ: 8774224 KB at 0s
+New Peak CPU: 1528% at 0s
+New Peak VSZ: 10115688 KB at 1s
+New Peak CPU: 2567% at 1s
+
+========================================
+FINAL RESULTS
+========================================
+DuckDB: duckdb_RPT
+Query: dsb_agg/query100.sql
+Database: dsb_db
+End Time: Thu Oct 16 12:45:30 UTC 2025
+Execution time: 1s
+Exit code: 0
+Peak RSS (Physical Memory): 2949.21 MB
+Peak VSZ (Virtual Memory): 9878.60 MB
+Peak CPU Usage: 2567%
+Average RSS: 1700.87 MB
+Average VSZ: 6167.96 MB
+Total samples collected: 3
+Memory CSV file: log/memory_duckdb_RPT_dsb_agg_query100_20251016_124529_memory.csv
+========================================

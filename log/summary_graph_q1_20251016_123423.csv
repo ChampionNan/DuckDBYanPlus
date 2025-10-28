@@ -1,0 +1,4 @@
+DuckDB_Path,Query_File,Database_File,Execution_Time_s,Exit_Code,Peak_RSS_MB,Peak_VSZ_MB,Peak_CPU%,Avg_RSS_MB,Log_File,Memory_CSV
+./duckdb_origin,graph/q1.sql,graph_db,137,0,63799.48,144198.59,523,58515.59,log/memory_duckdb_origin_graph_q1_20251016_123423.log,log/memory_duckdb_origin_graph_q1_20251016_123423_memory.csv
+./duckdb_RPT,graph/q1.sql,graph_db,167,0,64515.77,148258.08,6623,58690.35,log/memory_duckdb_RPT_graph_q1_20251016_123640.log,log/memory_duckdb_RPT_graph_q1_20251016_123640_memory.csv
+./duckdb_YanPlus,graph/q1.sql,graph_db,166,0,64523.47,148318.31,3661,57215.14,log/memory_duckdb_YanPlus_graph_q1_20251016_123927.log,log/memory_duckdb_YanPlus_graph_q1_20251016_123927_memory.csv

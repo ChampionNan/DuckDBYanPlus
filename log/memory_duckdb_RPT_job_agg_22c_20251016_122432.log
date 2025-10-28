@@ -1,0 +1,351 @@
+========================================
+MEMORY MONITORING LOG
+========================================
+DuckDB Path: ./duckdb_RPT
+Query File: job_agg/22c.sql
+Database File: job_db
+Start Time: Thu Oct 16 12:24:32 UTC 2025
+========================================
+
+Starting DuckDB process...
+DuckDB PID: 737046
+Memory monitoring started at: Thu Oct 16 12:24:32 UTC 2025
+Memory CSV file: log/memory_duckdb_RPT_job_agg_22c_20251016_122432_memory.csv
+No timeout - will run until completion
+----------------------------------------
+New Peak RSS: 7168 KB at 0s
+New Peak VSZ: 50140 KB at 0s
+New Peak RSS: 678492 KB at 1s
+New Peak VSZ: 6209868 KB at 1s
+New Peak RSS: 1867936 KB at 1s
+New Peak VSZ: 7514444 KB at 1s
+New Peak CPU: 1306% at 1s
+New Peak RSS: 3196032 KB at 2s
+New Peak VSZ: 9120476 KB at 2s
+New Peak CPU: 3279% at 2s
+New Peak RSS: 5271916 KB at 2s
+New Peak VSZ: 11459424 KB at 2s
+New Peak RSS: 6928428 KB at 3s
+New Peak VSZ: 13179744 KB at 3s
+New Peak CPU: 3625% at 3s
+New Peak RSS: 8367028 KB at 3s
+New Peak VSZ: 14662628 KB at 3s
+New Peak RSS: 9890076 KB at 4s
+New Peak VSZ: 16284776 KB at 4s
+New Peak CPU: 3914% at 4s
+New Peak RSS: 11323424 KB at 5s
+New Peak VSZ: 18609392 KB at 5s
+New Peak RSS: 12034032 KB at 5s
+New Peak VSZ: 18609656 KB at 5s
+New Peak RSS: 12370008 KB at 6s
+New Peak VSZ: 18871800 KB at 6s
+New Peak RSS: 12677672 KB at 6s
+New Peak VSZ: 19265016 KB at 6s
+New Peak RSS: 12987628 KB at 7s
+New Peak VSZ: 20051448 KB at 7s
+New Peak RSS: 13291368 KB at 7s
+New Peak VSZ: 20772344 KB at 7s
+New Peak RSS: 13601412 KB at 8s
+New Peak VSZ: 20837880 KB at 8s
+New Peak RSS: 13919688 KB at 8s
+New Peak RSS: 14231496 KB at 9s
+New Peak VSZ: 20919800 KB at 9s
+New Peak RSS: 14544072 KB at 10s
+New Peak VSZ: 21165560 KB at 10s
+New Peak RSS: 14856016 KB at 10s
+New Peak VSZ: 21411456 KB at 10s
+New Peak RSS: 15183656 KB at 11s
+New Peak VSZ: 22345344 KB at 11s
+Sample 20: RSS=14827.79MB, VSZ=21821.62MB, CPU=1607%, Elapsed=11s
+New Peak RSS: 15495672 KB at 11s
+New Peak VSZ: 23164544 KB at 11s
+New Peak RSS: 15814732 KB at 12s
+New Peak VSZ: 23492356 KB at 12s
+New Peak RSS: 16129924 KB at 12s
+New Peak VSZ: 23738116 KB at 12s
+New Peak RSS: 16439000 KB at 13s
+New Peak RSS: 16754128 KB at 13s
+New Peak VSZ: 23738248 KB at 13s
+New Peak RSS: 17057536 KB at 14s
+New Peak VSZ: 23836552 KB at 14s
+New Peak RSS: 17363880 KB at 15s
+New Peak VSZ: 24033160 KB at 15s
+New Peak RSS: 17667084 KB at 15s
+New Peak VSZ: 24229768 KB at 15s
+New Peak RSS: 17972960 KB at 16s
+New Peak VSZ: 25229192 KB at 16s
+New Peak RSS: 18322156 KB at 16s
+New Peak VSZ: 26113928 KB at 16s
+New Peak RSS: 18630956 KB at 17s
+New Peak VSZ: 26507144 KB at 17s
+New Peak RSS: 18936560 KB at 17s
+New Peak VSZ: 26703752 KB at 17s
+New Peak RSS: 19245232 KB at 18s
+New Peak VSZ: 27031432 KB at 18s
+New Peak RSS: 19553376 KB at 18s
+New Peak VSZ: 27228172 KB at 18s
+New Peak RSS: 19857848 KB at 19s
+New Peak RSS: 20162152 KB at 20s
+New Peak RSS: 20466640 KB at 20s
+New Peak VSZ: 27342992 KB at 20s
+New Peak RSS: 20771872 KB at 21s
+New Peak VSZ: 27785360 KB at 21s
+New Peak RSS: 21078808 KB at 21s
+New Peak VSZ: 28129424 KB at 21s
+New Peak RSS: 21388072 KB at 22s
+New Peak VSZ: 28932240 KB at 22s
+Sample 40: RSS=20886.79MB, VSZ=28254.14MB, CPU=829%, Elapsed=22s
+New Peak RSS: 21695264 KB at 22s
+New Peak VSZ: 29735056 KB at 22s
+New Peak RSS: 22005660 KB at 23s
+New Peak VSZ: 30537872 KB at 23s
+New Peak RSS: 22317580 KB at 23s
+New Peak VSZ: 30881936 KB at 23s
+New Peak RSS: 22629132 KB at 24s
+New Peak VSZ: 31111444 KB at 24s
+New Peak RSS: 22936068 KB at 24s
+New Peak VSZ: 31226132 KB at 24s
+New Peak RSS: 23244372 KB at 25s
+New Peak VSZ: 31455508 KB at 25s
+New Peak RSS: 23556468 KB at 26s
+New Peak RSS: 23865992 KB at 26s
+New Peak RSS: 24177188 KB at 27s
+New Peak VSZ: 31639828 KB at 27s
+New Peak RSS: 24505748 KB at 27s
+New Peak RSS: 24816616 KB at 28s
+New Peak VSZ: 31901972 KB at 28s
+New Peak RSS: 25131408 KB at 28s
+New Peak VSZ: 32295324 KB at 28s
+New Peak RSS: 25443328 KB at 29s
+New Peak VSZ: 32950684 KB at 29s
+New Peak RSS: 25756780 KB at 29s
+New Peak VSZ: 34261404 KB at 29s
+New Peak RSS: 26065924 KB at 30s
+New Peak VSZ: 34523548 KB at 30s
+New Peak RSS: 26379120 KB at 31s
+New Peak VSZ: 35309980 KB at 31s
+New Peak RSS: 26690968 KB at 31s
+New Peak VSZ: 35572124 KB at 31s
+New Peak RSS: 26998572 KB at 32s
+New Peak VSZ: 35703328 KB at 32s
+New Peak RSS: 27303444 KB at 32s
+New Peak VSZ: 35965472 KB at 32s
+New Peak RSS: 27613580 KB at 33s
+Sample 60: RSS=26966.39MB, VSZ=35122.53MB, CPU=585%, Elapsed=33s
+New Peak RSS: 27921812 KB at 33s
+New Peak VSZ: 36096544 KB at 33s
+New Peak RSS: 28228376 KB at 34s
+New Peak RSS: 28539752 KB at 34s
+New Peak RSS: 28849388 KB at 35s
+New Peak RSS: 29153964 KB at 35s
+New Peak VSZ: 36260520 KB at 35s
+New Peak RSS: 29457864 KB at 36s
+New Peak VSZ: 36424528 KB at 36s
+New Peak RSS: 29770560 KB at 37s
+New Peak VSZ: 36752208 KB at 37s
+New Peak RSS: 30074768 KB at 37s
+New Peak VSZ: 38095696 KB at 37s
+New Peak RSS: 30380540 KB at 38s
+New Peak VSZ: 39078736 KB at 38s
+New Peak RSS: 30707444 KB at 38s
+New Peak VSZ: 39570256 KB at 38s
+New Peak RSS: 31017064 KB at 39s
+New Peak VSZ: 40389456 KB at 39s
+New Peak RSS: 31327476 KB at 39s
+New Peak VSZ: 41044816 KB at 39s
+New Peak RSS: 31640536 KB at 40s
+New Peak VSZ: 41724752 KB at 40s
+New Peak RSS: 31948984 KB at 40s
+New Peak RSS: 32258540 KB at 41s
+New Peak RSS: 32566152 KB at 41s
+New Peak RSS: 32878364 KB at 42s
+New Peak VSZ: 41888592 KB at 42s
+New Peak RSS: 33188452 KB at 43s
+New Peak VSZ: 42281808 KB at 43s
+New Peak RSS: 33500804 KB at 43s
+New Peak VSZ: 42284632 KB at 43s
+New Peak RSS: 33825264 KB at 44s
+Sample 80: RSS=33032.48MB, VSZ=41293.59MB, CPU=467%, Elapsed=44s
+New Peak RSS: 34138000 KB at 44s
+New Peak RSS: 34446568 KB at 45s
+New Peak RSS: 34759064 KB at 45s
+New Peak RSS: 35069056 KB at 46s
+New Peak VSZ: 42677848 KB at 46s
+New Peak RSS: 35379308 KB at 46s
+New Peak VSZ: 42874456 KB at 46s
+New Peak RSS: 35689572 KB at 47s
+New Peak VSZ: 43464420 KB at 47s
+New Peak RSS: 35995344 KB at 48s
+New Peak VSZ: 43857636 KB at 48s
+New Peak RSS: 36310104 KB at 48s
+New Peak VSZ: 45234028 KB at 48s
+New Peak RSS: 36618076 KB at 49s
+New Peak VSZ: 46413808 KB at 49s
+New Peak RSS: 36933728 KB at 49s
+New Peak VSZ: 47200240 KB at 49s
+New Peak RSS: 37247632 KB at 50s
+New Peak VSZ: 48412656 KB at 50s
+New Peak RSS: 37561928 KB at 50s
+New Peak VSZ: 48805872 KB at 50s
+New Peak RSS: 37876472 KB at 51s
+New Peak RSS: 38192604 KB at 51s
+New Peak VSZ: 49002480 KB at 51s
+New Peak RSS: 38509908 KB at 52s
+New Peak VSZ: 49199088 KB at 52s
+New Peak RSS: 38827148 KB at 53s
+New Peak RSS: 39140664 KB at 53s
+New Peak RSS: 39454820 KB at 54s
+New Peak RSS: 39780616 KB at 54s
+New Peak RSS: 40091636 KB at 55s
+Sample 100: RSS=39151.99MB, VSZ=48045.98MB, CPU=399%, Elapsed=55s
+New Peak RSS: 40402564 KB at 55s
+New Peak RSS: 40719060 KB at 56s
+New Peak RSS: 41027356 KB at 56s
+New Peak RSS: 41333924 KB at 57s
+New Peak RSS: 41642816 KB at 58s
+New Peak VSZ: 49428464 KB at 58s
+New Peak RSS: 41946724 KB at 58s
+New Peak RSS: 42254352 KB at 59s
+New Peak RSS: 42564456 KB at 59s
+New Peak VSZ: 50346100 KB at 59s
+New Peak RSS: 42892316 KB at 60s
+New Peak VSZ: 50804852 KB at 60s
+New Peak RSS: 43198552 KB at 60s
+New Peak VSZ: 51722492 KB at 60s
+New Peak RSS: 43511192 KB at 61s
+New Peak VSZ: 52898208 KB at 61s
+New Peak RSS: 43823780 KB at 61s
+New Peak VSZ: 53586336 KB at 61s
+New Peak RSS: 44133560 KB at 62s
+New Peak VSZ: 54962592 KB at 62s
+New Peak RSS: 44443420 KB at 62s
+New Peak VSZ: 56338848 KB at 62s
+New Peak RSS: 44820808 KB at 63s
+New Peak VSZ: 56568224 KB at 63s
+New Peak RSS: 45127200 KB at 64s
+New Peak RSS: 45440184 KB at 64s
+New Peak VSZ: 56830368 KB at 64s
+New Peak RSS: 45776224 KB at 65s
+New Peak VSZ: 57059744 KB at 65s
+New Peak RSS: 46088028 KB at 65s
+New Peak VSZ: 57289120 KB at 65s
+New Peak RSS: 46402668 KB at 66s
+Sample 120: RSS=45315.11MB, VSZ=55946.41MB, CPU=357%, Elapsed=66s
+New Peak RSS: 46715004 KB at 66s
+New Peak RSS: 47021064 KB at 67s
+New Peak RSS: 47329640 KB at 68s
+New Peak RSS: 47642376 KB at 68s
+New Peak RSS: 47953788 KB at 69s
+New Peak RSS: 48266544 KB at 69s
+New Peak RSS: 48575648 KB at 70s
+New Peak VSZ: 57747872 KB at 70s
+New Peak RSS: 48903112 KB at 70s
+New Peak RSS: 49211528 KB at 71s
+New Peak RSS: 49520856 KB at 71s
+New Peak VSZ: 58010016 KB at 71s
+New Peak RSS: 49833712 KB at 72s
+New Peak VSZ: 58010148 KB at 72s
+New Peak RSS: 50145936 KB at 73s
+New Peak RSS: 50454584 KB at 73s
+New Peak VSZ: 58534568 KB at 73s
+New Peak RSS: 50764624 KB at 74s
+New Peak VSZ: 59058856 KB at 74s
+New Peak RSS: 51077920 KB at 74s
+New Peak RSS: 51390572 KB at 75s
+New Peak VSZ: 60107564 KB at 75s
+New Peak RSS: 51702724 KB at 75s
+New Peak VSZ: 61156140 KB at 75s
+New Peak RSS: 52021620 KB at 76s
+New Peak VSZ: 62466860 KB at 76s
+New Peak RSS: 52329828 KB at 76s
+New Peak VSZ: 63777580 KB at 76s
+New Peak RSS: 52634696 KB at 77s
+New Peak VSZ: 65088300 KB at 77s
+Sample 140: RSS=51401.07MB, VSZ=63562.79MB, CPU=328%, Elapsed=77s
+New Peak RSS: 52941044 KB at 77s
+New Peak VSZ: 65612588 KB at 77s
+New Peak RSS: 53247360 KB at 78s
+New Peak VSZ: 65874732 KB at 78s
+New Peak RSS: 53551764 KB at 79s
+New Peak VSZ: 66136876 KB at 79s
+New Peak RSS: 53853816 KB at 79s
+New Peak VSZ: 66431788 KB at 79s
+New Peak RSS: 54163012 KB at 80s
+New Peak RSS: 54468440 KB at 80s
+New Peak VSZ: 66693932 KB at 80s
+New Peak RSS: 54773212 KB at 81s
+New Peak VSZ: 67021744 KB at 81s
+New Peak RSS: 54942280 KB at 81s
+New Peak RSS: 54946412 KB at 82s
+New Peak VSZ: 67021876 KB at 82s
+New Peak RSS: 54950912 KB at 82s
+New Peak RSS: 54953784 KB at 83s
+New Peak RSS: 54956096 KB at 83s
+New Peak RSS: 54957500 KB at 84s
+New Peak RSS: 54959656 KB at 85s
+New Peak RSS: 54962112 KB at 85s
+New Peak RSS: 54962460 KB at 86s
+New Peak RSS: 54964352 KB at 86s
+New Peak RSS: 54966964 KB at 87s
+New Peak RSS: 54968296 KB at 87s
+New Peak RSS: 54971108 KB at 88s
+Sample 160: RSS=53682.72MB, VSZ=65451.05MB, CPU=303%, Elapsed=88s
+New Peak RSS: 54973884 KB at 88s
+New Peak RSS: 54974944 KB at 89s
+New Peak RSS: 54977488 KB at 90s
+New Peak VSZ: 67022140 KB at 90s
+New Peak RSS: 54978208 KB at 90s
+New Peak RSS: 54980040 KB at 91s
+New Peak RSS: 54982240 KB at 91s
+New Peak RSS: 54982948 KB at 92s
+New Peak RSS: 54984516 KB at 92s
+New Peak RSS: 54985400 KB at 93s
+New Peak RSS: 54987544 KB at 93s
+New Peak RSS: 54988744 KB at 94s
+New Peak RSS: 54990204 KB at 95s
+New Peak RSS: 54991512 KB at 95s
+New Peak RSS: 54993456 KB at 96s
+New Peak RSS: 54994848 KB at 96s
+New Peak RSS: 54994952 KB at 97s
+New Peak RSS: 54996772 KB at 97s
+New Peak RSS: 54996796 KB at 98s
+New Peak RSS: 55000240 KB at 99s
+New Peak RSS: 55001244 KB at 99s
+Sample 180: RSS=53712.15MB, VSZ=65451.31MB, CPU=280%, Elapsed=99s
+New Peak RSS: 55001976 KB at 100s
+New Peak RSS: 55002412 KB at 100s
+New Peak VSZ: 67022276 KB at 100s
+New Peak RSS: 55006028 KB at 101s
+New Peak VSZ: 67022408 KB at 101s
+New Peak RSS: 55007376 KB at 101s
+New Peak RSS: 55008020 KB at 102s
+New Peak RSS: 55009724 KB at 103s
+New Peak RSS: 55011152 KB at 103s
+New Peak RSS: 55012176 KB at 104s
+New Peak RSS: 55013392 KB at 105s
+New Peak RSS: 55014752 KB at 105s
+New Peak RSS: 55017968 KB at 106s
+New Peak RSS: 55018172 KB at 106s
+New Peak RSS: 55021564 KB at 107s
+New Peak RSS: 55037836 KB at 110s
+Sample 200: RSS=53747.59MB, VSZ=65451.57MB, CPU=278%, Elapsed=110s
+New Peak RSS: 55296176 KB at 111s
+New Peak VSZ: 67025740 KB at 111s
+
+========================================
+FINAL RESULTS
+========================================
+DuckDB: duckdb_RPT
+Query: job_agg/22c.sql
+Database: job_db
+End Time: Thu Oct 16 12:26:30 UTC 2025
+Execution time: 118s
+Exit code: 0
+Peak RSS (Physical Memory): 54000.17 MB
+Peak VSZ (Virtual Memory): 65454.82 MB
+Peak CPU Usage: 3914%
+Average RSS: 36826.17 MB
+Average VSZ: 47437.96 MB
+Total samples collected: 214
+Memory CSV file: log/memory_duckdb_RPT_job_agg_22c_20251016_122432_memory.csv
+========================================

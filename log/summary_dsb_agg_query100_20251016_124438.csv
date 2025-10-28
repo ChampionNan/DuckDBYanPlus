@@ -1,0 +1,4 @@
+DuckDB_Path,Query_File,Database_File,Execution_Time_s,Exit_Code,Peak_RSS_MB,Peak_VSZ_MB,Peak_CPU%,Avg_RSS_MB,Log_File,Memory_CSV
+./duckdb_origin,dsb_agg/query100.sql,dsb_db,51,0,36970.11,72978.16,2910,18541.20,log/memory_duckdb_origin_dsb_agg_query100_20251016_124438.log,log/memory_duckdb_origin_dsb_agg_query100_20251016_124438_memory.csv
+./duckdb_RPT,dsb_agg/query100.sql,dsb_db,1,0,2949.21,9878.60,2567,1700.87,log/memory_duckdb_RPT_dsb_agg_query100_20251016_124529.log,log/memory_duckdb_RPT_dsb_agg_query100_20251016_124529_memory.csv
+./duckdb_YanPlus,dsb_agg/query100.sql,dsb_db,2,0,4003.18,10210.46,2081,1703.13,log/memory_duckdb_YanPlus_dsb_agg_query100_20251016_124531.log,log/memory_duckdb_YanPlus_dsb_agg_query100_20251016_124531_memory.csv

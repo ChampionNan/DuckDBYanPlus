@@ -1,0 +1,4 @@
+DuckDB_Path,Query_File,Database_File,Execution_Time_s,Exit_Code,Peak_RSS_MB,Peak_VSZ_MB,Peak_CPU%,Avg_RSS_MB,Log_File,Memory_CSV
+./duckdb_origin,tpch/10.sql,tpch_db,6,0,10719.71,17870.65,3709,4946.49,log/memory_duckdb_origin_tpch_10_20251016_122214.log,log/memory_duckdb_origin_tpch_10_20251016_122214_memory.csv
+./duckdb_RPT,tpch/10.sql,tpch_db,6,0,11326.68,19355.74,5484,5598.81,log/memory_duckdb_RPT_tpch_10_20251016_122220.log,log/memory_duckdb_RPT_tpch_10_20251016_122220_memory.csv
+./duckdb_YanPlus,tpch/10.sql,tpch_db,7,0,10289.93,17170.18,3438,5368.29,log/memory_duckdb_YanPlus_tpch_10_20251016_122226.log,log/memory_duckdb_YanPlus_tpch_10_20251016_122226_memory.csv

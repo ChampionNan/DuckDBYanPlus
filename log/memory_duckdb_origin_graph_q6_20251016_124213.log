@@ -1,0 +1,187 @@
+========================================
+MEMORY MONITORING LOG
+========================================
+DuckDB Path: ./duckdb_origin
+Query File: graph/q6.sql
+Database File: graph_db
+Start Time: Thu Oct 16 12:42:13 UTC 2025
+========================================
+
+Starting DuckDB process...
+DuckDB PID: 776822
+Memory monitoring started at: Thu Oct 16 12:42:13 UTC 2025
+Memory CSV file: log/memory_duckdb_origin_graph_q6_20251016_124213_memory.csv
+No timeout - will run until completion
+----------------------------------------
+New Peak RSS: 23256 KB at 0s
+New Peak VSZ: 67768 KB at 0s
+New Peak RSS: 118108 KB at 1s
+New Peak VSZ: 4712104 KB at 1s
+New Peak RSS: 145352 KB at 1s
+New Peak VSZ: 5598888 KB at 1s
+New Peak CPU: 429% at 1s
+New Peak RSS: 182416 KB at 2s
+New Peak VSZ: 5643944 KB at 2s
+New Peak CPU: 651% at 2s
+New Peak RSS: 211100 KB at 3s
+New Peak VSZ: 5669544 KB at 3s
+New Peak RSS: 223468 KB at 3s
+New Peak VSZ: 5682856 KB at 3s
+New Peak RSS: 236816 KB at 4s
+New Peak VSZ: 5699240 KB at 4s
+New Peak RSS: 249656 KB at 4s
+New Peak VSZ: 5711528 KB at 4s
+New Peak RSS: 265252 KB at 5s
+New Peak VSZ: 5733032 KB at 5s
+New Peak RSS: 276992 KB at 5s
+New Peak VSZ: 5749416 KB at 5s
+New Peak RSS: 293396 KB at 6s
+New Peak RSS: 307188 KB at 6s
+New Peak VSZ: 5778088 KB at 6s
+New Peak RSS: 321128 KB at 7s
+New Peak RSS: 338548 KB at 7s
+New Peak VSZ: 5802664 KB at 7s
+New Peak RSS: 345864 KB at 8s
+New Peak VSZ: 5812904 KB at 8s
+New Peak RSS: 347540 KB at 9s
+New Peak RSS: 350392 KB at 9s
+New Peak RSS: 354860 KB at 10s
+New Peak VSZ: 5825192 KB at 10s
+New Peak RSS: 360852 KB at 10s
+New Peak RSS: 365464 KB at 11s
+Sample 20: RSS=356.90MB, VSZ=5688.66MB, CPU=299%, Elapsed=11s
+New Peak RSS: 370012 KB at 11s
+New Peak VSZ: 5839528 KB at 11s
+New Peak RSS: 373712 KB at 12s
+New Peak VSZ: 5853864 KB at 12s
+New Peak RSS: 377784 KB at 12s
+New Peak RSS: 383600 KB at 13s
+New Peak RSS: 389824 KB at 13s
+New Peak VSZ: 5870248 KB at 13s
+New Peak RSS: 394496 KB at 14s
+New Peak RSS: 399460 KB at 15s
+New Peak RSS: 404548 KB at 15s
+New Peak RSS: 411524 KB at 16s
+New Peak VSZ: 5890728 KB at 16s
+New Peak RSS: 416272 KB at 16s
+New Peak RSS: 422960 KB at 17s
+New Peak RSS: 428420 KB at 17s
+New Peak VSZ: 5915304 KB at 17s
+New Peak RSS: 434248 KB at 18s
+New Peak VSZ: 5915436 KB at 18s
+New Peak RSS: 441988 KB at 18s
+New Peak RSS: 450572 KB at 19s
+New Peak RSS: 458684 KB at 20s
+New Peak VSZ: 5944108 KB at 20s
+New Peak RSS: 468256 KB at 20s
+New Peak VSZ: 5960492 KB at 20s
+New Peak RSS: 475616 KB at 21s
+New Peak RSS: 477112 KB at 21s
+New Peak RSS: 478372 KB at 22s
+Sample 40: RSS=467.16MB, VSZ=5820.79MB, CPU=240%, Elapsed=22s
+New Peak RSS: 479164 KB at 22s
+New Peak RSS: 479956 KB at 23s
+New Peak RSS: 480708 KB at 23s
+New Peak RSS: 481764 KB at 24s
+New Peak RSS: 482556 KB at 24s
+New Peak RSS: 483412 KB at 25s
+New Peak RSS: 484456 KB at 26s
+New Peak RSS: 485360 KB at 26s
+New Peak RSS: 486140 KB at 27s
+New Peak RSS: 486916 KB at 27s
+New Peak RSS: 487396 KB at 28s
+New Peak RSS: 488212 KB at 28s
+New Peak RSS: 489580 KB at 29s
+New Peak VSZ: 5980972 KB at 29s
+New Peak RSS: 490860 KB at 29s
+New Peak VSZ: 5981108 KB at 29s
+New Peak RSS: 492156 KB at 30s
+New Peak RSS: 492960 KB at 30s
+New Peak RSS: 493784 KB at 31s
+New Peak RSS: 494692 KB at 32s
+New Peak RSS: 495520 KB at 32s
+New Peak RSS: 496092 KB at 33s
+Sample 60: RSS=484.46MB, VSZ=5840.93MB, CPU=192%, Elapsed=33s
+New Peak RSS: 497000 KB at 33s
+New Peak RSS: 497880 KB at 34s
+New Peak RSS: 498592 KB at 34s
+New Peak RSS: 499908 KB at 35s
+New Peak RSS: 501264 KB at 35s
+New Peak RSS: 503040 KB at 36s
+New Peak RSS: 504900 KB at 37s
+New Peak RSS: 506368 KB at 37s
+New Peak RSS: 507616 KB at 38s
+New Peak RSS: 508648 KB at 38s
+New Peak RSS: 509584 KB at 39s
+New Peak VSZ: 6005684 KB at 39s
+New Peak RSS: 510360 KB at 39s
+New Peak RSS: 510808 KB at 40s
+New Peak RSS: 511632 KB at 40s
+New Peak RSS: 512528 KB at 41s
+New Peak RSS: 513700 KB at 41s
+New Peak RSS: 515428 KB at 42s
+New Peak RSS: 517008 KB at 43s
+New Peak RSS: 518260 KB at 43s
+New Peak RSS: 519368 KB at 44s
+New Peak VSZ: 6005816 KB at 44s
+Sample 80: RSS=507.20MB, VSZ=5865.05MB, CPU=168%, Elapsed=44s
+New Peak RSS: 521028 KB at 44s
+New Peak RSS: 523308 KB at 45s
+New Peak RSS: 525852 KB at 45s
+New Peak RSS: 527984 KB at 46s
+New Peak RSS: 529448 KB at 46s
+New Peak RSS: 530564 KB at 47s
+New Peak RSS: 531528 KB at 48s
+New Peak RSS: 532572 KB at 48s
+New Peak RSS: 533344 KB at 49s
+New Peak VSZ: 6005964 KB at 49s
+New Peak RSS: 533880 KB at 49s
+New Peak RSS: 535668 KB at 50s
+New Peak VSZ: 6034636 KB at 50s
+New Peak RSS: 537224 KB at 50s
+New Peak RSS: 538992 KB at 51s
+New Peak RSS: 540660 KB at 51s
+New Peak RSS: 542612 KB at 52s
+New Peak RSS: 544212 KB at 52s
+New Peak RSS: 545488 KB at 53s
+New Peak RSS: 546700 KB at 54s
+New Peak RSS: 548196 KB at 54s
+New Peak VSZ: 6034768 KB at 54s
+New Peak RSS: 549804 KB at 55s
+Sample 100: RSS=536.92MB, VSZ=5893.33MB, CPU=154%, Elapsed=55s
+New Peak RSS: 553044 KB at 55s
+New Peak RSS: 556392 KB at 56s
+New Peak RSS: 560036 KB at 56s
+New Peak RSS: 563056 KB at 57s
+New Peak VSZ: 6067536 KB at 57s
+New Peak RSS: 565192 KB at 57s
+New Peak RSS: 567396 KB at 58s
+New Peak RSS: 570312 KB at 58s
+New Peak RSS: 572740 KB at 59s
+New Peak RSS: 574496 KB at 60s
+New Peak RSS: 576020 KB at 60s
+New Peak RSS: 577928 KB at 61s
+New Peak RSS: 580268 KB at 61s
+New Peak RSS: 584344 KB at 62s
+New Peak VSZ: 6067668 KB at 62s
+New Peak RSS: 588616 KB at 62s
+New Peak RSS: 591940 KB at 63s
+New Peak RSS: 594436 KB at 63s
+
+========================================
+FINAL RESULTS
+========================================
+DuckDB: duckdb_origin
+Query: graph/q6.sql
+Database: graph_db
+End Time: Thu Oct 16 12:43:18 UTC 2025
+Execution time: 64s
+Exit code: 0
+Peak RSS (Physical Memory): 580.50 MB
+Peak VSZ (Virtual Memory): 5925.46 MB
+Peak CPU Usage: 651%
+Average RSS: 447.78 MB
+Average VSZ: 5749.37 MB
+Total samples collected: 117
+Memory CSV file: log/memory_duckdb_origin_graph_q6_20251016_124213_memory.csv
+========================================

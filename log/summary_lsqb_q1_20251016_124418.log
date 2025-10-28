@@ -1,0 +1,55 @@
+========================================
+QUERY SUMMARY LOG
+========================================
+Query File: lsqb/q1.sql
+Database File: lsqb_db
+Summary started at: Thu Oct 16 12:44:18 UTC 2025
+========================================
+
+Testing with DuckDB: ./duckdb_origin
+Results for ./duckdb_origin:
+  Execution time: 9s
+  Exit code: 0
+  Peak RSS: 13618.93 MB
+  Peak VSZ: 21813.25 MB
+  Peak CPU: 4604%
+  Average RSS: 9559.53 MB
+  Log file: log/memory_duckdb_origin_lsqb_q1_20251016_124418.log
+  Memory CSV: log/memory_duckdb_origin_lsqb_q1_20251016_124418_memory.csv
+
+✅ Success
+
+Testing with DuckDB: ./duckdb_RPT
+Results for ./duckdb_RPT:
+  Execution time: 7s
+  Exit code: 0
+  Peak RSS: 13604.35 MB
+  Peak VSZ: 21864.35 MB
+  Peak CPU: 6615%
+  Average RSS: 9687.83 MB
+  Log file: log/memory_duckdb_RPT_lsqb_q1_20251016_124428.log
+  Memory CSV: log/memory_duckdb_RPT_lsqb_q1_20251016_124428_memory.csv
+
+✅ Success
+
+Testing with DuckDB: ./duckdb_YanPlus
+Results for ./duckdb_YanPlus:
+  Execution time: 2s
+  Exit code: 0
+  Peak RSS: 8767.16 MB
+  Peak VSZ: 16966.11 MB
+  Peak CPU: 3518%
+  Average RSS: 4002.49 MB
+  Log file: log/memory_duckdb_YanPlus_lsqb_q1_20251016_124436.log
+  Memory CSV: log/memory_duckdb_YanPlus_lsqb_q1_20251016_124436_memory.csv
+
+✅ Success
+
+Query Summary for lsqb/q1.sql:
+  Successful tests: 3
+  Failed/Skipped tests: 0
+  Summary CSV saved to: log/summary_lsqb_q1_20251016_124418.csv
+  Summary log saved to: log/summary_lsqb_q1_20251016_124418.log
+
+Summary completed at: Thu Oct 16 12:44:38 UTC 2025
+=======================================
