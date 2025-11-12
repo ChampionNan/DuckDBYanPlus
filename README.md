@@ -1,10 +1,10 @@
-## Dynamic Predicate Transfer
+## Yannakakis<sup>+</sup>
 
-This repository contains the implementation of **Dynamic Predicate Transfer (RPT+)**, built on top of [DuckDB v1.3.0](https://github.com/duckdb/duckdb/tree/v1.3-ossivalis). It provides a customized version of DuckDB. Compared to the original Robust Predicate Transfer (RPT), RPT+ introduces the following key improvements:
+This repository contains the implementation of **Yannakakis<sup>+</sup>**, built on top of [DuckDB v1.3.0](https://github.com/duckdb/duckdb/tree/v1.3-ossivalis). It provides a customized version of DuckDB. Compared to the original Yannakakis<sup>+</sup>, this version introduces the following key improvements:
 
-- An **asymmetric filter transfer plan** to reduce redundant Bloom Filter (BF) construction.
-- A **cascade filter mechanism** that combines min-max and Bloom filters for hierarchical filtering efficiency.
-- A **dynamic pipeline strategy** that adapts filter creation and transfer based on runtime selectivity.
+- Replace semi-join in original Yannakakis algorithm with **Bloom Filter**. 
+- Apply **aggregation push-down** in the query plan. 
+- Use **GYO** algorithm when query is acyclic and fallback to the original DuckDB plan only when the query is cyclic. 
 
 ## Build
 
@@ -20,27 +20,22 @@ BUILD_BENCHMARK=1 make # Build with benchmark support
 
 ## Baselines
 
-- **RPT (Robust Predicate Transfer)**: [https://github.com/embryo-labs/Robust-Predicate-Transfer](https://github.com/embryo-labs/Robust-Predicate-Transfer)
 - **DuckDB v1.3.0**: [https://github.com/duckdb/duckdb/tree/v1.3-ossivalis](https://github.com/duckdb/duckdb/tree/v1.3-ossivalis)
+- **RPT (Robust Predicate Transfer)**: [https://github.com/embryo-labs/Robust-Predicate-Transfer](https://github.com/embryo-labs/Robust-Predicate-Transfer)
+
+- **Parachute**: https://github.com/utndatasystems/parachute
+- **SYA**: https://github.com/UHasselt-DSI-Data-Systems-Lab/code-reproducability-yannakakis-vldb2025
+- **Yannakakis<sup>+</sup> (rewrite)**: https://github.com/hkustDB/Quorion
 
 ## Benchmark
 
-### Join Order Benchmark (JOB)
+- Sub-Graph Pattern Benchmark (SGPB) 
 
-DuckDB includes a built-in implementation of the Join Order Benchmark. You can build and run it with:
+- LSQB 
 
-```bash
-BUILD_BENCHMARK=1 BUILD_TPCH=1 BUILD_TPCDS=1 BUILD_HTTPFS=1 CORE_EXTENSIONS='tpch' make
-build/release/benchmark/benchmark_runner "benchmark/imdb/.*.benchmark" --threads=1
-```
+- TPC-H & Decision Support Benchmark (DSB)
 
-### SQLStorm
-
-To run the SQLStorm benchmark:
-
-1. Clone and set up the benchmark framework from the [SQLStorm repository](https://github.com/SQL-Storm/SQLStorm).
-2. Download the [StackOverflow Math dataset](https://db.in.tum.de/~schmidt/data/stackoverflow_math.tar.gz) and load it according to SQLStorm’s setup instructions.
-3. The list of queries that are executable with DuckDB is available [here](https://github.com/SQL-Storm/SQLStorm/blob/master/v1.0/stackoverflow/valid_queries.csv).
+- Join Order Benchmark (JOB)
 
 
 > Below is the original DuckDB's README.
